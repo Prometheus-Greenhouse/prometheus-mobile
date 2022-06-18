@@ -10,14 +10,14 @@
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:theme="@style/Theme.Minervamobile.AppBarOverlay">
+            android:theme="@style/Theme.prometheusmobile.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:popupTheme="@style/Theme.Minervamobile.PopupOverlay"/>
+                app:popupTheme="@style/Theme.prometheusmobile.PopupOverlay"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
