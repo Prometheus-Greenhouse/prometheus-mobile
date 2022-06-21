@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".workflow.DocumentFragment">
+
+    <TextView
+            android:id="@+id/text_document"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="409dp"
+            android:layout_height="100dp"
+            tools:layout_editor_absoluteX="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+        <Button
+                android:text="@string/btn_apply_approve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/apply_approve"
+                android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <TextView
+            android:text="@string/los_id"
+            android:layout_width="102dp"
+            android:layout_height="45dp"
+            android:id="@+id/tv_los_id"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:textSize="34sp"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text=""
+            android:ems="10"
+            android:id="@+id/editTextTextPersonName"
+            tools:layout_editor_absoluteY="173dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_los_id"
+    />
+    <TextView
+            android:text="@string/username"
+            android:layout_width="102dp"
+            android:layout_height="45dp"
+            android:id="@+id/tv_username"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:textSize="34sp"/>
+    <EditText
+            android:layout_width="153dp"
+            android:layout_height="46dp"
+            android:inputType="textPersonName"
+            android:text=""
+            android:ems="10"
+            android:id="@+id/editTextTextPersonName2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_username"
+    />
+</androidx.constraintlayout.widget.ConstraintLayout>

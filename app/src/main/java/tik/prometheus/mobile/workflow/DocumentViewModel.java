@@ -1,20 +1,21 @@
-package tik.prometheus.mobile.ui.slideshow;
+package tik.prometheus.mobile.workflow;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class SlideshowViewModel extends ViewModel {
-
+public class DocumentViewModel extends ViewModel {
     private MutableLiveData<String> mText;
 
-    public SlideshowViewModel() {
-
+    public DocumentViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is slideshow fragment");
+        mText.setValue("This is document fragment");
     }
 
     public LiveData<String> getText() {
         return mText;
     }
+
+
+
 }

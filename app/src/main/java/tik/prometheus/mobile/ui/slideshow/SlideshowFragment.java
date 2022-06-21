@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import tik.prometheus.mobile.R;
 import tik.prometheus.mobile.databinding.FragmentSlideshowBinding;
 
 public class SlideshowFragment extends Fragment {

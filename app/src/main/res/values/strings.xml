@@ -10,4 +10,16 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_document">Document</string>
+
+    <string name="btn_apply_approve">Trình PD</string>
+    <string name="btn_apply_control">Trình KS</string>
+    <string name="btn_approve">Duyệt</string>
+    <string name="btn_close">Đóng</string>
+    <string name="btn_freeze">Phong tỏa</string>
+    <string name="btn_process">Xử lý</string>
+    <string name="btn_return_init">Chuyển trả</string>
+    <string name="btn_save">Lưu</string>
+    <string name="los_id">LOS ID</string>
+    <string name="username">USERNAME</string>
 </resources>
