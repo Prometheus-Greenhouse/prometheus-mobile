@@ -8,6 +8,47 @@
         tools:context=".workflow.DocumentFragment">
 
     <TextView
+            android:text="@string/state_id"
+            android:id="@+id/tv_state_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivReloadStateGuide"
+    />
+    <TextView
+            android:text="@string/state_name"
+            android:id="@+id/tv_state_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_state_id"
+    />
+
+    <ImageView
+            android:src="@android:drawable/ic_popup_sync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivReloadStateGuide"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintTop_toBottomOf="@id/txtLosId"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+    />
+    <TextView
             android:id="@+id/text_document"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,54 +62,46 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
     <LinearLayout
+            android:id="@+id/ln_btn_line"
             android:orientation="horizontal"
             android:layout_width="409dp"
-            android:layout_height="100dp"
+            android:layout_height="120dp"
             tools:layout_editor_absoluteX="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
-        <Button
-                android:text="@string/btn_apply_approve"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/apply_approve"
-                android:layout_weight="1"/>
 
     </LinearLayout>
 
     <TextView
             android:text="@string/los_id"
             android:layout_width="102dp"
-            android:layout_height="45dp"
+            android:layout_height="30dp"
             android:id="@+id/tv_los_id"
+            android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" android:textSize="34sp"/>
+            app:layout_constraintTop_toBottomOf="@id/sn_username" android:textSize="20sp"/>
     <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="43dp"
             android:inputType="textPersonName"
             android:text=""
             android:ems="10"
-            android:id="@+id/editTextTextPersonName"
-            tools:layout_editor_absoluteY="173dp"
+            android:id="@+id/txtLosId"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_los_id"
     />
     <TextView
             android:text="@string/username"
-            android:layout_width="102dp"
-            android:layout_height="45dp"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
             android:id="@+id/tv_username"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" android:textSize="34sp"/>
-    <EditText
-            android:layout_width="153dp"
-            android:layout_height="46dp"
-            android:inputType="textPersonName"
-            android:text=""
-            android:ems="10"
-            android:id="@+id/editTextTextPersonName2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_username"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:textSize="20sp"/>
+    <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="43dp"
+            android:id="@+id/sn_username"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_username"
     />
 </androidx.constraintlayout.widget.ConstraintLayout>
