@@ -5,10 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,6 +15,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import tik.prometheus.mobile.databinding.FragmentDocumentBinding;
+import tik.prometheus.mobile.models.Document;
 import tik.prometheus.mobile.models.User;
 import tik.prometheus.mobile.services.HTTPConnector;
 
@@ -43,7 +41,7 @@ public class DocumentFragment extends Fragment {
         workflowRepos.getUsers().enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                Log.d("--->", ""+response.code());
+                Log.d("--->", "" + response.code());
                 if (response.isSuccessful()) {
                     adapter.clear();
                     adapter.addAll(response.body());
@@ -62,21 +60,28 @@ public class DocumentFragment extends Fragment {
     private void onCreate(FragmentDocumentBinding binding) {
 
 
-//        ListView lvDocument = binding.lvDocument;
-//        ArrayAdapter<Document> documentArrayAdapter = new DocumentAdapter(binding.getRoot().getContext(), new ArrayList<>());
-//        lvDocument.setAdapter(documentArrayAdapter);
-//        workflowRepos.getDocuments().enqueue(new Callback<List<Document>>() {
-//            @Override
-//            public void onResponse(Call<List<Document>> call, Response<List<Document>> response) {
-//                documentArrayAdapter.clear();
-//                documentArrayAdapter.addAll(response.body());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Document>> call, Throwable t) {
-//
-//            }
-//        });
+        ListView lvDocument = binding.lvDocument;
+        ArrayAdapter<Document> documentArrayAdapter = new DocumentAdapter(binding.getRoot().getContext(), new ArrayList<>());
+        lvDocument.setAdapter(documentArrayAdapter);
+        workflowRepos.getDocuments().enqueue(new Callback<List<Document>>() {
+            @Override
+            public void onResponse(Call<List<Document>> call, Response<List<Document>> response) {
+                documentArrayAdapter.clear();
+                documentArrayAdapter.addAll(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Document>> call, Throwable t) {
+
+            }
+        });
+        lvDocument.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView tv = view.findViewById(android.R.id.text1);
+                binding.txtLosId.setText(tv.getText());
+            }
+        });
 
         binding.ivReloadStateGuide.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +111,7 @@ public class DocumentFragment extends Fragment {
                     JsonObject guide = data.getAsJsonObject("guide");
                     ln.removeAllViews();
                     for (Map.Entry<String, JsonElement> entry : guide.entrySet()) {
-                        Button btn = ButtonMap.getButton(entry.getKey(), binding.getRoot().getContext(), callback);
+                        Button btn = ButtonMap.getButton(entry.getKey(), user.getUsername(), losId, binding.getRoot().getContext(), callback);
                         ln.addView(btn);
                     }
 

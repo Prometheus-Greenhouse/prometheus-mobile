@@ -16,15 +16,24 @@ import tik.prometheus.mobile.services.HTTPConnector;
 import java.util.function.Consumer;
 
 public class ButtonMap {
+    public static class ButtonRequest {
+        public String action;
+        public String username;
+        public String losId;
 
-    private static void onClick(String action, Consumer<Object> callback) {
-        String username = "VYNKK";
-        String los_id = "123";
-        WorkflowRepos workflowRepos = HTTPConnector.createService(WorkflowRepos.class, username, "1");
-        workflowRepos.action(action, los_id).enqueue(new Callback<JsonObject>() {
+        public ButtonRequest(String action, String username, String losId) {
+            this.action = action;
+            this.username = username;
+            this.losId = losId;
+        }
+    }
+
+    private static void onClick(ButtonRequest request, Consumer<Object> callback) {
+        WorkflowRepos workflowRepos = HTTPConnector.createService(WorkflowRepos.class, request.username, "1");
+        workflowRepos.action(request.action, request.losId).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                Log.d(ButtonMap.class.toString(), action + response.code());
+                Log.d(ButtonMap.class.toString(), request.action + response.code());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     callback.accept(null);
                 }
@@ -37,92 +46,59 @@ public class ButtonMap {
         });
     }
 
-    public static Button getButton(String code, Context context, Consumer<Object> callback) {
+    public static Button getButton(String code, String username, String losId, Context context, Consumer<Object> callback) {
         Button btn = new Button(context);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
         btn.setLayoutParams(lp);
+        ButtonRequest req = new ButtonRequest("", username, losId);
         switch (code) {
             case "apply_approve": {
-                btn.setText("Trình");
-                btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ButtonMap.onClick("apply/approve", callback);
-                    }
-                });
-                return btn;
+                btn.setText("Trình PD");
+                req.action = "apply/approve";
+                break;
             }
             case "apply_control": {
-                btn.setText("Trình");
-                btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ButtonMap.onClick("apply/control", callback);
-                    }
-                });
-                return btn;
+                btn.setText("Trình KS");
+                req.action = "apply/control";
+                break;
             }
             case "approve": {
                 btn.setText("Duyệt");
-                btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ButtonMap.onClick("approve", callback);
-                    }
-                });
-                return btn;
+                req.action = "approve";
+                break;
             }
             case "close": {
                 btn.setText("Đóng");
-                btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ButtonMap.onClick("close", callback);
-                    }
-                });
-                return btn;
+                req.action = "close";
+                break;
             }
             case "freeze": {
                 btn.setText("Phong tỏa");
-                btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ButtonMap.onClick("freeze", callback);
-                    }
-                });
-                return btn;
+                req.action = "freeze";
+                break;
             }
             case "process": {
                 btn.setText("Xử lý");
-                btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ButtonMap.onClick("process", callback);
-                    }
-                });
-                return btn;
+                req.action = "process";
+                break;
             }
             case "return_init": {
                 btn.setText("Chuyển trả");
-                btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ButtonMap.onClick("return/init", callback);
-                    }
-                });
-                return btn;
+                req.action = "return/init";
+                break;
             }
             case "save": {
                 btn.setText("Lưu");
-                btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ButtonMap.onClick("save", callback);
-                    }
-                });
-                return btn;
+                req.action = "save";
+                break;
             }
         }
-        return null;
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ButtonMap.onClick(req, callback);
+            }
+        });
+        return btn;
     }
 }
