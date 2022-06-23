@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import androidx.annotation.RequiresApi;
 import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,37 +26,40 @@ public class ButtonMap {
         public String username;
         public String losId;
 
-        public ButtonRequest(String action, String username, String losId) {
+        public DocumentFragment fragment;
+
+        public ButtonRequest(String action, String username, String losId, DocumentFragment fragment) {
             this.action = action;
             this.username = username;
             this.losId = losId;
+            this.fragment = fragment;
         }
     }
 
-    private static void onClick(ButtonRequest request, Consumer<Object> callback) {
+    private static void onClick(ButtonRequest request) {
         WorkflowRepos workflowRepos = HTTPConnector.createService(WorkflowRepos.class, request.username, "1");
+
+
         workflowRepos.action(request.action, request.losId).enqueue(new Callback<JsonObject>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 Log.d(ButtonMap.class.toString(), request.action + response.code());
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    callback.accept(null);
-                }
+                request.fragment.loadStateGuide(null);
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-
             }
         });
     }
 
-    public static Button getButton(String code, String username, String losId, Context context, Consumer<Object> callback) {
+    public static Button getButton(String code, String username, String losId, DocumentFragment fragment, Context context) {
         Button btn = new Button(context);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
         lp.setMargins(5, 0, 5, 0);
         btn.setLayoutParams(lp);
-        ButtonRequest req = new ButtonRequest("", username, losId);
+        ButtonRequest req = new ButtonRequest("", username, losId, fragment);
         switch (code) {
             case "apply_approve": {
                 btn.setText("Trình PD");
@@ -100,7 +105,7 @@ public class ButtonMap {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ButtonMap.onClick(req, callback);
+                ButtonMap.onClick(req);
             }
         });
         TypedValue typedValue = new TypedValue();

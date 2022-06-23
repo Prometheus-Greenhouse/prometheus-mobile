@@ -14,7 +14,6 @@ import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import tik.prometheus.mobile.R;
 import tik.prometheus.mobile.databinding.FragmentDocumentBinding;
 import tik.prometheus.mobile.models.Document;
 import tik.prometheus.mobile.models.User;
@@ -98,7 +97,7 @@ public class DocumentFragment extends Fragment {
         workflowRepos = HTTPConnector.createService(WorkflowRepos.class, user.getUsername(), "1");
         String losId = binding.txtLosId.getText().toString();
         Log.d(DocumentFragment.class.toString(), user.getUsername());
-        Consumer<Object> callback = this::loadStateGuide;
+        DocumentFragment fragment = this;
         ProgressBar progressBar = binding.pbWaiting;
         progressBar.setVisibility(View.VISIBLE);
         workflowRepos.getStateGuide(losId).enqueue(new Callback<JsonObject>() {
@@ -114,7 +113,7 @@ public class DocumentFragment extends Fragment {
                     JsonObject guide = data.getAsJsonObject("guide");
                     ln.removeAllViews();
                     for (Map.Entry<String, JsonElement> entry : guide.entrySet()) {
-                        Button btn = ButtonMap.getButton(entry.getKey(), user.getUsername(), losId, binding.getRoot().getContext(), callback);
+                        Button btn = ButtonMap.getButton(entry.getKey(), user.getUsername(), losId, fragment, binding.getRoot().getContext());
                         ln.addView(btn);
                     }
 
