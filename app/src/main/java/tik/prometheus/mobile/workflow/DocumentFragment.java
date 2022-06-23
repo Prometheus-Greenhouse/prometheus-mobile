@@ -14,6 +14,7 @@ import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import tik.prometheus.mobile.R;
 import tik.prometheus.mobile.databinding.FragmentDocumentBinding;
 import tik.prometheus.mobile.models.Document;
 import tik.prometheus.mobile.models.User;
@@ -98,6 +99,8 @@ public class DocumentFragment extends Fragment {
         String losId = binding.txtLosId.getText().toString();
         Log.d(DocumentFragment.class.toString(), user.getUsername());
         Consumer<Object> callback = this::loadStateGuide;
+        ProgressBar progressBar = binding.pbWaiting;
+        progressBar.setVisibility(View.VISIBLE);
         workflowRepos.getStateGuide(losId).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -118,11 +121,13 @@ public class DocumentFragment extends Fragment {
                 } else {
                     Log.d("Load failed", String.format("%s", response.code()));
                 }
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 Log.d("HIHI", "Failure");
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

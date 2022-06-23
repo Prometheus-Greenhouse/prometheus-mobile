@@ -24,4 +24,7 @@ public interface WorkflowRepos {
 
     @GET("/api/v1/documents/")
     Call<List<Document>> getDocuments();
+
+    @POST("/api/v1/documents/")
+    Call<JsonObject> postDocument();
 }
