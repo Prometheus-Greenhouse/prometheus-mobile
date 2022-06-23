@@ -1,8 +1,10 @@
 package tik.prometheus.mobile.workflow;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Build;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import tik.prometheus.mobile.R;
 import tik.prometheus.mobile.services.HTTPConnector;
 
 import java.util.function.Consumer;
@@ -49,6 +52,7 @@ public class ButtonMap {
     public static Button getButton(String code, String username, String losId, Context context, Consumer<Object> callback) {
         Button btn = new Button(context);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
+        lp.setMargins(5, 0, 5, 0);
         btn.setLayoutParams(lp);
         ButtonRequest req = new ButtonRequest("", username, losId);
         switch (code) {
@@ -99,6 +103,12 @@ public class ButtonMap {
                 ButtonMap.onClick(req, callback);
             }
         });
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        btn.setBackgroundColor(typedValue.data);
+        theme.resolveAttribute(R.attr.colorOnPrimary, typedValue, true);
+        btn.setTextColor(typedValue.data);
         return btn;
     }
 }
