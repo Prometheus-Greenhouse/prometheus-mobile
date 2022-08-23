@@ -1,5 +1,6 @@
 package tik.prometheus.mobile.ui.gallery;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import tik.prometheus.mobile.R;
 import tik.prometheus.mobile.databinding.FragmentGalleryBinding;
+import tik.prometheus.mobile.services.MqttService;
 
 public class GalleryFragment extends Fragment {
 
@@ -27,6 +28,13 @@ public class GalleryFragment extends Fragment {
         View root = binding.getRoot();
 
         final TextView textView = binding.textGallery;
+        binding.startService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().startService(new Intent(getActivity(), MqttService.class));
+            }
+        });
+
         galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {

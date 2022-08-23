@@ -20,4 +20,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
+    <Button
+            android:text="Start service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/startService"
+            tools:layout_editor_absoluteY="41dp"
+            tools:layout_editor_absoluteX="146dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+    />
 </androidx.constraintlayout.widget.ConstraintLayout>
