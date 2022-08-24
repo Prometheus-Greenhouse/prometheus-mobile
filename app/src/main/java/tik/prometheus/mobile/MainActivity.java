@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar;
 import tik.prometheus.mobile.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
+    final String TAG = MainActivity.class.toString();
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
