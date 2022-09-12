@@ -1,4 +1,4 @@
-package tik.prometheus.mobile.ui.slideshow;
+package tik.prometheus.mobile.ui.screen.slideshow;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

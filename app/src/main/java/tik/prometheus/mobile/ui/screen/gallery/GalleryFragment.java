@@ -1,4 +1,4 @@
-package tik.prometheus.mobile.ui.gallery;
+package tik.prometheus.mobile.ui.screen.gallery;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -7,7 +7,6 @@ import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import tik.prometheus.mobile.workflow.AuthenticationInterceptor;
 
 public class HTTPConnector {
     public static final String API_BASE_URL = "https://hidden-woodland-82190.herokuapp.com";
@@ -41,17 +40,17 @@ public class HTTPConnector {
 
     public static <S> S createService(
             Class<S> serviceClass, final String authToken) {
-        if (!TextUtils.isEmpty(authToken)) {
-            AuthenticationInterceptor interceptor =
-                    new AuthenticationInterceptor(authToken);
-
-            if (!httpClient.interceptors().contains(interceptor)) {
-                httpClient.addInterceptor(interceptor);
-
-                builder.client(httpClient.build());
-                retrofit = builder.build();
-            }
-        }
+//        if (!TextUtils.isEmpty(authToken)) {
+//            AuthenticationInterceptor interceptor =
+//                    new AuthenticationInterceptor(authToken);
+//
+//            if (!httpClient.interceptors().contains(interceptor)) {
+//                httpClient.addInterceptor(interceptor);
+//
+//                builder.client(httpClient.build());
+//                retrofit = builder.build();
+//            }
+//        }
 
         return retrofit.create(serviceClass);
     }

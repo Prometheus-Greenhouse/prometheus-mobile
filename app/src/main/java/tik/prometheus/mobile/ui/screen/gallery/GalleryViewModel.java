@@ -1,4 +1,4 @@
-package tik.prometheus.mobile.ui.gallery;
+package tik.prometheus.mobile.ui.screen.gallery;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

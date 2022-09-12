@@ -1,10 +1,12 @@
-package tik.prometheus.mobile;
+package tik.prometheus.mobile.ui.screen;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import tik.prometheus.mobile.Configs;
+import tik.prometheus.mobile.R;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
