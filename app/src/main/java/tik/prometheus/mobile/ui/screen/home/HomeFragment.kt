@@ -33,8 +33,11 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
         binding = FragmentHomeBinding.inflate(layoutInflater)
-        val sensorAdapter = SensorAdapter()
+        // CHAR
+        initChart()
 
+        // SENSOR
+        val sensorAdapter = SensorAdapter()
         binding.sensorsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
@@ -47,11 +50,9 @@ class HomeFragment : Fragment() {
                 sensorAdapter.submitData(it)
             }
         }
-
         binding.btnRetry.setOnClickListener {
             sensorAdapter.retry()
         }
-
         sensorAdapter.addLoadStateListener { loadState ->
             if (loadState.refresh is LoadState.Loading) {
                 binding.btnRetry.visibility = View.GONE
@@ -73,6 +74,7 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+
         return binding.root
     }
 //
@@ -106,7 +108,7 @@ class HomeFragment : Fragment() {
 //    }
 
     private fun initChart() {
-        mpLinechart = binding!!.lineChart
+        mpLinechart = binding.lineChart
         val dataSets: MutableList<ILineDataSet> = ArrayList()
         dataSets.add(
             LineDataSet(dataValues(), "Data set 1")

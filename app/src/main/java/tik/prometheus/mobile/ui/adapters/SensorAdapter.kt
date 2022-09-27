@@ -20,8 +20,10 @@ class SensorAdapter : PagingDataAdapter<SensorModel, RecyclerView.ViewHolder>(Se
                 is SensorModel.SensorItem -> {
                     val viewHolder = holder as SensorViewHolder
                     sensorModel.mqttClient = MqttHelper.createSensorListener(viewHolder.sensorItemBinding.root.context, sensorModel.sensor.topic, viewHolder);
+                    viewHolder.sensorItemBinding.txtId.text = "%s-%s".format(sensorModel.sensor.id, sensorModel.sensor.localId)
+                    viewHolder.sensorItemBinding.txtSensorType.text = sensorModel.sensor.type
+                    viewHolder.sensorItemBinding.value.text = "0"
                     viewHolder.sensorItemBinding.unit.text = sensorModel.sensor.unit
-                    viewHolder.sensorItemBinding.value.text = sensorModel.sensor.topic
                 }
 
                 is SensorModel.SeparatorItem -> {
