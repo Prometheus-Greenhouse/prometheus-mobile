@@ -1,14 +1,14 @@
-package tik.prometheus.mobile.ui.screen.slideshow;
+package tik.prometheus.mobile.ui.screen.farm;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class SlideshowViewModel extends ViewModel {
+public class FarmViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public SlideshowViewModel() {
+    public FarmViewModel() {
 
         mText = new MutableLiveData<>();
         mText.setValue("This is slideshow fragment");

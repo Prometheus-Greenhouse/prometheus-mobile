@@ -13,15 +13,15 @@
 
     <fragment
             android:id="@+id/nav_gallery"
-            android:name="tik.prometheus.mobile.ui.screen.gallery.GalleryFragment"
+            android:name="tik.prometheus.mobile.ui.screen.sensordetail.SensorDetailFragment"
             android:label="@string/menu_gallery"
-            tools:layout="@layout/fragment_gallery"/>
+            tools:layout="@layout/fragment_sensor_detail"/>
 
     <fragment
             android:id="@+id/nav_slideshow"
-            android:name="tik.prometheus.mobile.ui.screen.slideshow.SlideshowFragment"
+            android:name="tik.prometheus.mobile.ui.screen.farm.FarmFragment"
             android:label="@string/menu_slideshow"
-            tools:layout="@layout/fragment_slideshow"/>
+            tools:layout="@layout/fragment_farm"/>
     <fragment
             android:id="@+id/nav_document"
             android:label="@string/menu_document"

@@ -1,4 +1,4 @@
-package tik.prometheus.mobile.ui.screen.slideshow;
+package tik.prometheus.mobile.ui.screen.farm;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,19 +10,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import tik.prometheus.mobile.databinding.FragmentSlideshowBinding;
+import tik.prometheus.mobile.databinding.FragmentFarmBinding;
 
-public class SlideshowFragment extends Fragment {
+public class FarmFragment extends Fragment {
 
-    private SlideshowViewModel slideshowViewModel;
-    private FragmentSlideshowBinding binding;
+    private FarmViewModel slideshowViewModel;
+    private FragmentFarmBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         slideshowViewModel =
-                new ViewModelProvider(this).get(SlideshowViewModel.class);
+                new ViewModelProvider(this).get(FarmViewModel.class);
 
-        binding = FragmentSlideshowBinding.inflate(inflater, container, false);
+        binding = FragmentFarmBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textSlideshow;
