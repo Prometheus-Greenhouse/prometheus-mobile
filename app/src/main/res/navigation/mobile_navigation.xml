@@ -12,18 +12,15 @@
             tools:layout="@layout/fragment_home"/>
 
     <fragment
-            android:id="@+id/nav_gallery"
-            android:name="tik.prometheus.mobile.ui.screen.sensordetail.SensorDetailFragment"
-            android:label="@string/menu_gallery"
-            tools:layout="@layout/fragment_sensor_detail"/>
-
-    <fragment
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_farm"
             android:name="tik.prometheus.mobile.ui.screen.farm.FarmFragment"
-            android:label="@string/menu_slideshow"
+            android:label="@string/menu_farm"
             tools:layout="@layout/fragment_farm"/>
     <fragment
-            android:id="@+id/nav_document"
-            android:label="@string/menu_document"
-            tools:layout="@layout/fragment_document"/>
+            android:id="@+id/nav_greenhouse"
+            android:name="tik.prometheus.mobile.ui.screen.greenhouse.GreenhouseFragment"
+            android:label="@string/menu_greenhouse"
+            tools:layout="@layout/fragment_greenhouse"/>
+
+
 </navigation>
