@@ -8,9 +8,9 @@ import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import tik.prometheus.mobile.databinding.ItemPagingLoadingBinding
 
-class SensorLoadStateAdapter(
+class ZLoadStateAdapter(
     private val retry: () -> Unit
-) : LoadStateAdapter<SensorLoadStateAdapter.LoadStateViewHolder>() {
+) : LoadStateAdapter<ZLoadStateAdapter.LoadStateViewHolder>() {
 
 
     override fun onBindViewHolder(holder: LoadStateViewHolder, loadState: LoadState) {

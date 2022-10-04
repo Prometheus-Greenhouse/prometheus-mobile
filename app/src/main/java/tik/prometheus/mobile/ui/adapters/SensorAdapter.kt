@@ -1,6 +1,7 @@
 package tik.prometheus.mobile.ui.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -9,10 +10,11 @@ import tik.prometheus.mobile.R
 import tik.prometheus.mobile.databinding.ItemPagingSensorBinding
 import tik.prometheus.mobile.databinding.ItemPagingSeperatorBinding
 import tik.prometheus.mobile.services.MqttHelper
+import tik.prometheus.mobile.services.MqttSensorViewHolder
+import tik.prometheus.mobile.NestableFragment
 import tik.prometheus.mobile.ui.screen.home.SensorModel
 
-class SensorAdapter : PagingDataAdapter<SensorModel, RecyclerView.ViewHolder>(SensorComparator) {
-
+class SensorAdapter(var parent: NestableFragment<SensorModel.SensorItem>) : PagingDataAdapter<SensorModel, RecyclerView.ViewHolder>(SensorComparator) {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val sensorModel = getItem(position)
         sensorModel.let {
@@ -24,6 +26,10 @@ class SensorAdapter : PagingDataAdapter<SensorModel, RecyclerView.ViewHolder>(Se
                     viewHolder.sensorItemBinding.txtSensorType.text = sensorModel.sensor.type
                     viewHolder.sensorItemBinding.value.text = "0"
                     viewHolder.sensorItemBinding.unit.text = sensorModel.sensor.unit
+
+                    holder.itemView.setOnClickListener(View.OnClickListener {
+                        parent.insertNestedFragment(sensorModel)
+                    })
                 }
 
                 is SensorModel.SeparatorItem -> {
@@ -62,7 +68,12 @@ class SensorAdapter : PagingDataAdapter<SensorModel, RecyclerView.ViewHolder>(Se
         }
     }
 
-    class SensorViewHolder(val sensorItemBinding: ItemPagingSensorBinding) : RecyclerView.ViewHolder(sensorItemBinding.root)
+    class SensorViewHolder(val sensorItemBinding: ItemPagingSensorBinding) : RecyclerView.ViewHolder(sensorItemBinding.root), MqttSensorViewHolder {
+        override fun updateMqttValue(value: String) {
+            sensorItemBinding.value.text = value
+        }
+
+    }
 
     class SensorSeparatorViewHolder(val movieItemSeperatorBinding: ItemPagingSeperatorBinding) : RecyclerView.ViewHolder(movieItemSeperatorBinding.root)
 

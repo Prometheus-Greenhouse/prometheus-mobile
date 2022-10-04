@@ -1,6 +1,8 @@
 package tik.prometheus.mobile.ui.screen.home
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,32 +19,37 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import tik.prometheus.mobile.NestableFragment
 import tik.prometheus.mobile.R
 import tik.prometheus.mobile.databinding.FragmentHomeBinding
 import tik.prometheus.mobile.ui.adapters.SensorAdapter
-import tik.prometheus.mobile.ui.adapters.SensorLoadStateAdapter
+import tik.prometheus.mobile.ui.adapters.ZLoadStateAdapter
+import tik.prometheus.mobile.ui.screen.sensor.SensorDetailFragment
 import tik.prometheus.mobile.utils.themeColor
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), NestableFragment<SensorModel.SensorItem> {
+    val TAG = HomeFragment::class.toString()
+
     private lateinit var viewModel: HomeViewModel
-    private lateinit var binding: FragmentHomeBinding
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     private var mpLinechart: LineChart? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-
-        binding = FragmentHomeBinding.inflate(layoutInflater)
+        _binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
         // CHAR
         initChart()
 
         // SENSOR
-        val sensorAdapter = SensorAdapter()
+        val sensorAdapter = SensorAdapter(this)
+
         binding.sensorsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = sensorAdapter.withLoadStateFooter(
-                footer = SensorLoadStateAdapter { sensorAdapter.retry() }
+                footer = ZLoadStateAdapter { sensorAdapter.retry() }
             )
         }
         lifecycleScope.launch {
@@ -137,6 +144,21 @@ class HomeFragment : Fragment() {
 
     private fun showToast(value: CharSequence) {
         Toast.makeText(this.context, value, Toast.LENGTH_LONG).show()
+    }
+
+    override fun insertNestedFragment(model: SensorModel.SensorItem) {
+        val childFragment = SensorDetailFragment(model);
+        activity?.supportFragmentManager?.let {
+            it.beginTransaction()
+                .replace(R.id.nav_host_container, childFragment)
+                .addToBackStack(SensorDetailFragment::class.java.name)
+                .commit()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

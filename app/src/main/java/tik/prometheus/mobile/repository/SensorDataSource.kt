@@ -10,7 +10,7 @@ class SensorDataSource(
     private val restServiceApi: RestServiceApi,
 ) : PagingSource<Int, Sensor>() {
     val TAG = SensorDataSource::class.toString()
-    override fun getRefreshKey(state: PagingState<Int, Sensor>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Sensor>): Int {
         return 0;
     }
 

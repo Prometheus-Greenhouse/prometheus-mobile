@@ -1,4 +1,4 @@
-package tik.prometheus.mobile.ui.screen.sensordetail;
+package tik.prometheus.mobile.ui.screen.sensor;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
