@@ -1,5 +1,8 @@
 package tik.prometheus.rest.models
 
+import tik.prometheus.mobile.models.Actuator
+import tik.prometheus.mobile.models.Sensor
+
 
 class Greenhouse(
     var id: Long,
@@ -10,8 +13,8 @@ class Greenhouse(
     var width: Float? = Float.NaN,
     var length: Float? = Float.NaN,
     var cultivationArea: Float? = Float.NaN,
-    var sensorCount: Int = 0,
-    var actuatorCount: Int = 0
+    var sensors: List<Sensor> = emptyList(),
+    var actuators: List<Actuator> = emptyList()
 )
 
 class GreenhouseReq(

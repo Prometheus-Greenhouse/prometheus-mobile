@@ -1,4 +1,4 @@
-package tik.prometheus.mobile.ui.screen.home
+package tik.prometheus.mobile.ui.screen.sensor
 
 import androidx.lifecycle.ViewModel
 import androidx.paging.*

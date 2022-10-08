@@ -3,7 +3,6 @@ package tik.prometheus.mobile.ui.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import tik.prometheus.mobile.R
@@ -13,7 +12,7 @@ import tik.prometheus.mobile.services.MqttHelper
 import tik.prometheus.mobile.services.MqttSensorViewHolder
 import tik.prometheus.mobile.NestableFragment
 import tik.prometheus.mobile.ZPagingDataAdapter
-import tik.prometheus.mobile.ui.screen.home.SensorModel
+import tik.prometheus.mobile.ui.screen.sensor.SensorModel
 
 class SensorAdapter(var parent: NestableFragment<SensorModel.SensorItem>) : ZPagingDataAdapter<SensorModel, RecyclerView.ViewHolder>(SensorComparator) {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

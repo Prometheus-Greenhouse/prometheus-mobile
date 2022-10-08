@@ -9,8 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.paging.LoadState
 import tik.prometheus.mobile.ZFragment
 import tik.prometheus.mobile.databinding.FragmentGreenhouseDetailBinding
+import tik.prometheus.mobile.utils.Utils
 
-class GreenhouseDetailFragment(private val greenhouseItem: GreenhouseModel.GreenhouseItem) : ZFragment() {
+class GreenhouseDetailFragment : ZFragment() {
     val TAG = GreenhouseDetailFragment::class.toString()
     private var _viewModel: GreenhouseDetailViewModel? = null
     private var _binding: FragmentGreenhouseDetailBinding? = null
@@ -20,9 +21,10 @@ class GreenhouseDetailFragment(private val greenhouseItem: GreenhouseModel.Green
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _viewModel = ViewModelProvider(this).get(GreenhouseDetailViewModel::class.java)
         _binding = FragmentGreenhouseDetailBinding.inflate(inflater, container, false)
-//        loadData()
-//        binding.btnRetry.setOnClickListener { loadData() }
-        viewModel.getGreenhouseDetail(greenhouseItem.greenhouse.id)
+
+        val greenhouseId = requireArguments().getLong(Utils.KEY_GREENHOUSE_ID)
+
+        viewModel.getGreenhouseDetail(greenhouseId)
         viewModel.loadState.observe(requireActivity(), Observer {
             println("observer load state")
             when (it) {
@@ -57,6 +59,8 @@ class GreenhouseDetailFragment(private val greenhouseItem: GreenhouseModel.Green
             binding.txtHeight.text = it.height.toString()
             binding.txtWidth.text = it.width.toString()
             binding.txtLength.text = it.length.toString()
+            binding.txtActuatorCount.text = "Actuator (" + it.actuators.size + ")"
+            binding.txtSensorCount.text = "Sensor (" + it.sensors.size + ")"
         })
 
         return binding.root;

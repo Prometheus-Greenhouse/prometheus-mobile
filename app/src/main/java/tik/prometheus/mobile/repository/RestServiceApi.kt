@@ -11,8 +11,12 @@ import tik.prometheus.rest.models.Farm
 import tik.prometheus.rest.models.Greenhouse
 
 interface RestServiceApi {
+
     @GET("/sensors")
     suspend fun getSensors(@QueryMap pageable: Map<String, String>): Response<Page<Sensor>>
+
+    @GET("/sensors/{id}")
+    suspend fun getSensor(@Path("id") id: Long): Response<Sensor>
 
     @GET("/farms")
     suspend fun aGetFarms(@QueryMap pageable: Map<String, String>): Response<Page<Farm>>

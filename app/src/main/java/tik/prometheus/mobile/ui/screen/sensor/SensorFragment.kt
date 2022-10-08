@@ -1,12 +1,13 @@
-package tik.prometheus.mobile.ui.screen.home
+package tik.prometheus.mobile.ui.screen.sensor
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -17,11 +18,11 @@ import tik.prometheus.mobile.R
 import tik.prometheus.mobile.ZFragment
 import tik.prometheus.mobile.databinding.FragmentHomeBinding
 import tik.prometheus.mobile.ui.adapters.SensorAdapter
-import tik.prometheus.mobile.ui.screen.sensor.SensorDetailFragment
+import tik.prometheus.mobile.utils.Utils
 import tik.prometheus.mobile.utils.themeColor
 
-class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
-    val TAG = HomeFragment::class.toString()
+class SensorFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
+    val TAG = SensorFragment::class.toString()
 
     private lateinit var viewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
@@ -102,12 +103,15 @@ class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
 
 
     override fun insertNestedFragment(model: SensorModel.SensorItem) {
-        val childFragment = SensorDetailFragment(model);
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.nav_host_container, childFragment)
-            .addToBackStack(SensorDetailFragment::class.java.name)
-            .commit()
+        val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_container)
+        val args = bundleOf(Utils.KEY_SENSOR_ID to model.sensor.id)
+        navController.navigate(R.id.nav_sensor_detail, args)
+//        val childFragment = SensorDetailFragment(model);
+//        requireActivity().supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.nav_host_container, childFragment)
+//            .addToBackStack(SensorDetailFragment::class.java.name)
+//            .commit()
     }
 
     override fun onDestroyView() {

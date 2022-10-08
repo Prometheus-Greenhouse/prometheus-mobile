@@ -10,7 +10,7 @@ import java.util.*
 
 
 object Utils {
-//    @ColorInt
+    //    @ColorInt
 //    @SuppressLint("Recycle")
 //    fun Context.themeColor(themeAttrId: Int): Int {
 //        return obtainStyledAttributes(
@@ -31,7 +31,11 @@ object Utils {
         }
         return "${obj.javaClass.simpleName}=[${s.joinToString(", ")}]"
     }
+
+    const val KEY_GREENHOUSE_ID = "KEY_GREENHOUSE_ID"
+    const val KEY_SENSOR_ID = "KEY_SENSOR_ID"
 }
+
 @ColorInt
 @SuppressLint("Recycle")
 fun Context.themeColor(themeAttrId: Int): Int {
