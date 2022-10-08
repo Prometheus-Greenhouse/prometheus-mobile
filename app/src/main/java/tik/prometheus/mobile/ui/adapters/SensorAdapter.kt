@@ -12,9 +12,10 @@ import tik.prometheus.mobile.databinding.ItemPagingSeperatorBinding
 import tik.prometheus.mobile.services.MqttHelper
 import tik.prometheus.mobile.services.MqttSensorViewHolder
 import tik.prometheus.mobile.NestableFragment
+import tik.prometheus.mobile.ZPagingDataAdapter
 import tik.prometheus.mobile.ui.screen.home.SensorModel
 
-class SensorAdapter(var parent: NestableFragment<SensorModel.SensorItem>) : PagingDataAdapter<SensorModel, RecyclerView.ViewHolder>(SensorComparator) {
+class SensorAdapter(var parent: NestableFragment<SensorModel.SensorItem>) : ZPagingDataAdapter<SensorModel, RecyclerView.ViewHolder>(SensorComparator) {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val sensorModel = getItem(position)
         sensorModel.let {

@@ -1,33 +1,26 @@
 package tik.prometheus.mobile.ui.screen.home
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import tik.prometheus.mobile.NestableFragment
 import tik.prometheus.mobile.R
+import tik.prometheus.mobile.ZFragment
 import tik.prometheus.mobile.databinding.FragmentHomeBinding
 import tik.prometheus.mobile.ui.adapters.SensorAdapter
-import tik.prometheus.mobile.ui.adapters.ZLoadStateAdapter
 import tik.prometheus.mobile.ui.screen.sensor.SensorDetailFragment
 import tik.prometheus.mobile.utils.themeColor
 
-class HomeFragment : Fragment(), NestableFragment<SensorModel.SensorItem> {
+class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
     val TAG = HomeFragment::class.toString()
 
     private lateinit var viewModel: HomeViewModel
@@ -44,43 +37,9 @@ class HomeFragment : Fragment(), NestableFragment<SensorModel.SensorItem> {
 
         // SENSOR
         val sensorAdapter = SensorAdapter(this)
+        sensorAdapter.initAdapter(binding.sensorsRecyclerView, binding.btnRetry, viewModel.sensors, lifecycleScope)
+        sensorAdapter.addLoadStateListener(binding.btnRetry, binding.progressBar)
 
-        binding.sensorsRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = sensorAdapter.withLoadStateFooter(
-                footer = ZLoadStateAdapter { sensorAdapter.retry() }
-            )
-        }
-        lifecycleScope.launch {
-            viewModel.sensors.collectLatest {
-                sensorAdapter.submitData(it)
-            }
-        }
-        binding.btnRetry.setOnClickListener {
-            sensorAdapter.retry()
-        }
-        sensorAdapter.addLoadStateListener { loadState ->
-            if (loadState.refresh is LoadState.Loading) {
-                binding.btnRetry.visibility = View.GONE
-                binding.progressBar.visibility = View.VISIBLE
-            } else {
-                binding.progressBar.visibility = View.GONE
-                val errorState = when {
-                    loadState.append is LoadState.Error -> loadState.append as LoadState.Error
-                    loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
-                    loadState.refresh is LoadState.Error -> {
-                        binding.btnRetry.visibility = View.VISIBLE
-                        loadState.refresh as LoadState.Error
-                    }
-
-                    else -> null
-                }
-                errorState?.let {
-                    showToast(it.error.message.toString())
-                }
-            }
-        }
 
         return binding.root
     }
@@ -142,18 +101,13 @@ class HomeFragment : Fragment(), NestableFragment<SensorModel.SensorItem> {
     }
 
 
-    private fun showToast(value: CharSequence) {
-        Toast.makeText(this.context, value, Toast.LENGTH_LONG).show()
-    }
-
     override fun insertNestedFragment(model: SensorModel.SensorItem) {
         val childFragment = SensorDetailFragment(model);
-        activity?.supportFragmentManager?.let {
-            it.beginTransaction()
-                .replace(R.id.nav_host_container, childFragment)
-                .addToBackStack(SensorDetailFragment::class.java.name)
-                .commit()
-        }
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.nav_host_container, childFragment)
+            .addToBackStack(SensorDetailFragment::class.java.name)
+            .commit()
     }
 
     override fun onDestroyView() {

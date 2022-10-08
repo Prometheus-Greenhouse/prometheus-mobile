@@ -1,5 +1,6 @@
 package tik.prometheus.mobile
 
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -56,7 +57,8 @@ abstract class ZPagingDataAdapter<T : Any, VH : RecyclerView.ViewHolder>(
                     else -> null
                 }
                 errorState?.let {
-                    showToast(it.error.message.toString())
+                    Log.d("zzzz", "addLoadStateListener: " + it.error)
+//                    showToast(it.error.message.toString())
                 }
 
             }

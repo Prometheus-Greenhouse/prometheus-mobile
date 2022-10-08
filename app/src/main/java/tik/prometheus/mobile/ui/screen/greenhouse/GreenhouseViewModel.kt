@@ -37,5 +37,6 @@ class GreenhouseViewModel(private val restServiceApi: RestServiceApi = RestServi
 
 sealed class GreenhouseModel {
     data class GreenhouseItem(val greenhouse: Greenhouse) : GreenhouseModel()
+    data class GreenhouseDetail(val greenhouse: Greenhouse) : GreenhouseModel()
     data class SeparatorItem(val description: String) : GreenhouseModel()
 }

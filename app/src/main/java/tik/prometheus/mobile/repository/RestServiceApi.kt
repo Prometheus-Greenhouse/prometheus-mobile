@@ -3,6 +3,7 @@ package tik.prometheus.mobile.repository
 import io.reactivex.Single
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.QueryMap
 import tik.prometheus.mobile.models.Page
 import tik.prometheus.mobile.models.Sensor
@@ -14,7 +15,7 @@ interface RestServiceApi {
     suspend fun getSensors(@QueryMap pageable: Map<String, String>): Response<Page<Sensor>>
 
     @GET("/farms")
-    suspend fun agetFarms(@QueryMap pageable: Map<String, String>): Response<Page<Farm>>
+    suspend fun aGetFarms(@QueryMap pageable: Map<String, String>): Response<Page<Farm>>
 
     @GET("/farms")
     fun getFarms(@QueryMap pageable: Map<String, String>): Single<Page<Farm>>
@@ -22,4 +23,6 @@ interface RestServiceApi {
     @GET("/greenhouses")
     suspend fun getGreenhouses(@QueryMap pageable: Map<String, String>): Response<Page<Greenhouse>>
 
+    @GET("/greenhouses/{id}")
+    suspend fun getGreenhouse(@Path("id") id: Long): Response<Greenhouse>
 }

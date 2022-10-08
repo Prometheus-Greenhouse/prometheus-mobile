@@ -18,7 +18,8 @@
     <string name="btn_freeze">Phong tỏa</string>
     <string name="btn_process">Xử lý</string>
     <string name="btn_return_init">Chuyển trả</string>
-    <string name="btn_save">Save</string>
+    <string name="save">Save</string>
+    <string name="retry">Retry</string>
     <string name="los_id">LOS ID</string>
     <string name="username">Username</string>
     <string name="state_id">state_id</string>

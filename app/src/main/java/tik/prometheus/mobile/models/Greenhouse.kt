@@ -2,13 +2,25 @@ package tik.prometheus.rest.models
 
 
 class Greenhouse(
+    var id: Long,
+    var farmId: Long? = null,
+    var type: String? = "NaN",
+    var area: Float? = Float.NaN,
+    var height: Float? = Float.NaN,
+    var width: Float? = Float.NaN,
+    var length: Float? = Float.NaN,
+    var cultivationArea: Float? = Float.NaN,
+    var sensorCount: Int = 0,
+    var actuatorCount: Int = 0
+)
+
+class GreenhouseReq(
     var id: Long? = null,
     var farmId: Long? = null,
-    var type: String? = null,
-    var area: Float? = null,
-    var height: Float? = null,
-    var width: Float? = null,
-    var length: Float? = null,
-    var cultivationArea: Float? = null,
-) {
-}
+    var type: String,
+    var area: Float,
+    var height: Float,
+    var width: Float,
+    var length: Float,
+    var cultivationArea: Float
+)

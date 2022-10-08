@@ -13,8 +13,9 @@ import tik.prometheus.mobile.services.MqttSensorViewHolder
 import tik.prometheus.mobile.ui.screen.home.SensorModel
 
 class SensorDetailFragment(private val sensorItem: SensorModel.SensorItem) : Fragment(), MqttSensorViewHolder {
-    private var galleryViewModel: SensorDetailViewModel? = null
-    private lateinit var binding: FragmentSensorDetailBinding
+    private var sensorViewModel: SensorDetailViewModel? = null
+    private var _binding: FragmentSensorDetailBinding? = null
+    private val binding get() = _binding!!
     private var mqttAndroidClient: MqttAndroidClient? = null
 
     override fun onCreateView(
@@ -22,17 +23,19 @@ class SensorDetailFragment(private val sensorItem: SensorModel.SensorItem) : Fra
         container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
-        galleryViewModel = ViewModelProvider(this).get(SensorDetailViewModel::class.java)
-        binding = FragmentSensorDetailBinding.inflate(inflater, container, false)
+        sensorViewModel = ViewModelProvider(this).get(SensorDetailViewModel::class.java)
+        _binding = FragmentSensorDetailBinding.inflate(inflater, container, false)
         mqttAndroidClient = MqttHelper.createSensorListener(binding.root.context, sensorItem.sensor.topic, this)
-        binding.txtSensorUnit.text = sensorItem.sensor.unit
+        val sensor = sensorItem.sensor
+
+        binding.txtSensorUnit.text = sensor.unit
         // TODO:
         //  binding.txtFarmValue.text = sensorItem.sensor
         //  binding.txtGreenhouseValue.text
-        binding.txtIdValue.text = sensorItem.sensor.id.toString()
-        binding.txtLocalIdValue.text = sensorItem.sensor.localId
-        binding.txtTypeValue.text = sensorItem.sensor.type
-        binding.txtUnitValue.text = sensorItem.sensor.unit
+        binding.txtIdValue.text = sensor.id.toString()
+        binding.txtLocalIdValue.text = sensor.localId
+        binding.txtTypeValue.text = sensor.type
+        binding.txtUnitValue.text = sensor.unit
 
         return binding.root
     }
