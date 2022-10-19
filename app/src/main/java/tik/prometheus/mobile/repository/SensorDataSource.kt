@@ -5,18 +5,20 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import tik.prometheus.mobile.models.Pageable
 import tik.prometheus.mobile.models.Sensor
+import tik.prometheus.mobile.utils.toExcept
 
 class SensorDataSource(
     private val restServiceApi: RestServiceApi,
 ) : PagingSource<Int, Sensor>() {
     val TAG = SensorDataSource::class.toString()
+    var greenhouseId: Long? = null
     override fun getRefreshKey(state: PagingState<Int, Sensor>): Int {
         return 0;
     }
 
     override suspend fun load(params: PagingSource.LoadParams<Int>): PagingSource.LoadResult<Int, Sensor> {
         val nextPage = params.key ?: 0
-        val res = restServiceApi.getSensors(Pageable(page = nextPage, size = 10).toMap())
+        val res = restServiceApi.getSensors(Pageable(page = nextPage, size = 10).toMap(), greenhouseId)
         if (res.isSuccessful) {
             val pageSensor = res.body()
             return LoadResult.Page(
@@ -25,8 +27,8 @@ class SensorDataSource(
                 nextKey = if (nextPage < pageSensor.totalPages) pageSensor.pageable.pageNumber.plus(1) else null
             )
         } else {
-            Log.d(TAG, "load: failed")
-            return LoadResult.Error(java.lang.Exception(res.errorBody().toString()))
+            val except = res.toExcept()
+            return LoadResult.Error(Exception(except.message))
         }
     }
 

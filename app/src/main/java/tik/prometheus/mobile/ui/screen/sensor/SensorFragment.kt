@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import tik.prometheus.mobile.NestableFragment
@@ -18,25 +18,30 @@ import tik.prometheus.mobile.utils.Utils
 class SensorFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
     val TAG = SensorFragment::class.toString()
 
-    private var _viewModel: SensorViewModel? = null
     private var _binding: FragmentSensorBinding? = null
 
-    private val viewModel get() = _viewModel!!
     private val binding get() = _binding!!
 
+    private val viewModel: SensorViewModel by viewModels { SensorViewModel.Factory(zContainer.sensorRepository) }
+    private val sensorAdapter = SensorAdapter(this)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _viewModel = ViewModelProvider(this).get(SensorViewModel::class.java)
         _binding = FragmentSensorBinding.inflate(layoutInflater, container, false)
+        viewModel.greenhouseId.postValue(requireArguments().getLong(Utils.KEY_GREENHOUSE_ID))
 
-        // SENSOR
-        val sensorAdapter = SensorAdapter(this)
-        sensorAdapter.initAdapter(binding.sensorsRecyclerView, binding.btnRetry, viewModel.sensors, lifecycleScope)
-        sensorAdapter.addLoadStateListener(binding.btnRetry, binding.progressBar)
+        viewModel.greenhouseId.observe(requireActivity()) {
+            viewModel.loadSensors()
+            // SENSOR
+            sensorAdapter.initAdapter(binding.sensorsRecyclerView, binding.btnRetry, viewModel.sensors, lifecycleScope)
+            sensorAdapter.addLoadStateListener(binding.btnRetry, binding.progressBar) {
+                showToast(it.error.toString())
+            }
+        }
 
 
         return binding.root
     }
+
     override fun insertNestedFragment(model: SensorModel.SensorItem) {
         val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_container)
         val pair = Pair(Utils.KEY_SENSOR_ID, model.sensor.id)

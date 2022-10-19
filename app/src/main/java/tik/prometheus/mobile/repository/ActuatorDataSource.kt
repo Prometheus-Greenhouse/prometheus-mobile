@@ -27,7 +27,7 @@ class ActuatorDataSource(
                 nextKey = if (nextPage < page.totalPages) page.pageable.pageNumber.plus(1) else null
             )
         } else {
-            val except = toExcept(res)
+            val except = res.toExcept()
             return LoadResult.Error(Exception(except.message))
         }
     }

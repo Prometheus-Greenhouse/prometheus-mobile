@@ -28,7 +28,7 @@ interface RestServiceApi {
     suspend fun getGreenhouse(@Path("id") id: Long): Response<Greenhouse>
 
     @GET("/sensors")
-    suspend fun getSensors(@QueryMap pageable: Map<String, String>): Response<Page<Sensor>>
+    suspend fun getSensors(@QueryMap pageable: Map<String, String>, @Query("greenhouseId") greenhouseId: Long? = null): Response<Page<Sensor>>
 
     @GET("/sensors/{id}")
     suspend fun getSensor(@Path("id") id: Long): Response<Sensor>
