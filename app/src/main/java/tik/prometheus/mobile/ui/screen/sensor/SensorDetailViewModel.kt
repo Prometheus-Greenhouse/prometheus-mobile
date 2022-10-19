@@ -11,19 +11,23 @@ import tik.prometheus.mobile.repository.RestServiceHelper
 import tik.prometheus.mobile.utils.Utils
 
 
-class SensorDetailViewModel(
-    private val restServiceApi: RestServiceApi = RestServiceHelper.createApi()
+class SensorDetailViewModel constructor(
+    args: Map<String, Any>,
+    restServiceApi: RestServiceApi
 ) : ZViewModel() {
+    constructor(args: Map<String, Any>) : this(args, RestServiceHelper.createApi())
 
     var sensor: MutableLiveData<Sensor> = MutableLiveData()
 
     init {
         val sensorId = args[Utils.KEY_SENSOR_ID] as Long
-        viewModelScope.launch(Dispatchers.IO) {
-            val res = restServiceApi.getSensor(sensorId)
-            println(res.body())
-            if (res.isSuccessful) {
-                sensor.postValue(res.body())
+        restServiceApi.let {
+            viewModelScope.launch(Dispatchers.IO) {
+                val res = it.getSensor(sensorId)
+                println(res.body())
+                if (res.isSuccessful) {
+                    sensor.postValue(res.body())
+                }
             }
         }
     }

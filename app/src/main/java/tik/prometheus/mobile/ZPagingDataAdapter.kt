@@ -1,6 +1,5 @@
 package tik.prometheus.mobile
 
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -39,7 +38,10 @@ abstract class ZPagingDataAdapter<T : Any, VH : RecyclerView.ViewHolder>(
         }
     }
 
-    fun addLoadStateListener(btnRetry: Button, progressBar: ProgressBar) {
+    fun addLoadStateListener(
+        btnRetry: Button, progressBar: ProgressBar,
+        handleErrorFunc: ((errorState: LoadState.Error) -> Unit)? = null
+    ) {
         addLoadStateListener { loadState ->
             if (loadState.refresh is LoadState.Loading) {
                 btnRetry.visibility = View.GONE
@@ -57,8 +59,7 @@ abstract class ZPagingDataAdapter<T : Any, VH : RecyclerView.ViewHolder>(
                     else -> null
                 }
                 errorState?.let {
-                    Log.d("zzzz", "addLoadStateListener: " + it.error)
-//                    showToast(it.error.message.toString())
+                    handleErrorFunc?.invoke(it)
                 }
 
             }

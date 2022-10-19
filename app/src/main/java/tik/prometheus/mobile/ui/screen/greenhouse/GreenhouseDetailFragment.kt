@@ -4,22 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.paging.LoadState
+import tik.prometheus.mobile.R
 import tik.prometheus.mobile.ZFragment
 import tik.prometheus.mobile.databinding.FragmentGreenhouseDetailBinding
 import tik.prometheus.mobile.utils.Utils
 
 class GreenhouseDetailFragment : ZFragment() {
     val TAG = GreenhouseDetailFragment::class.toString()
-    private var _viewModel: GreenhouseDetailViewModel? = null
+    val viewModel: GreenhouseDetailViewModel by viewModels { GreenhouseDetailViewModel.Factory(zContainer.greenhouseRepository) }
     private var _binding: FragmentGreenhouseDetailBinding? = null
-    private val viewModel get() = _viewModel!!
     private val binding get() = _binding!!
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _viewModel = ViewModelProvider(this).get(GreenhouseDetailViewModel::class.java)
         _binding = FragmentGreenhouseDetailBinding.inflate(inflater, container, false)
 
         val greenhouseId = requireArguments().getLong(Utils.KEY_GREENHOUSE_ID)
@@ -37,6 +39,7 @@ class GreenhouseDetailFragment : ZFragment() {
                 is LoadState.Error -> {
                     binding.btnRetry.visibility = View.VISIBLE
                     binding.progressBar.visibility = View.GONE
+                    binding.btnSave.visibility = View.GONE
                 }
 
                 is LoadState.NotLoading -> {
@@ -62,6 +65,18 @@ class GreenhouseDetailFragment : ZFragment() {
             binding.txtActuatorCount.text = "Actuator (" + it.actuators.size + ")"
             binding.txtSensorCount.text = "Sensor (" + it.sensors.size + ")"
         })
+
+        binding.btnActuatorCount.setOnClickListener {
+            val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_container);
+            val args = bundleOf(Utils.KEY_GREENHOUSE_ID to viewModel.greenhouse.value?.id)
+            navController.navigate(R.id.nav_actuator, args);
+        }
+
+        binding.btnSensorCount.setOnClickListener {
+            val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_container);
+            val args = bundleOf(Utils.KEY_GREENHOUSE_ID to viewModel.greenhouse.value?.id)
+            navController.navigate(R.id.nav_sensor, args);
+        }
 
         return binding.root;
     }

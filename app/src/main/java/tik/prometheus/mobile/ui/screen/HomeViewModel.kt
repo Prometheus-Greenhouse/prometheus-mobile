@@ -1,17 +1,17 @@
-package tik.prometheus.mobile.ui.screen.sensor
+package tik.prometheus.mobile.ui.screen
 
+import androidx.lifecycle.ViewModel
 import androidx.paging.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.eclipse.paho.android.service.MqttAndroidClient
-import tik.prometheus.mobile.ZViewModel
 import tik.prometheus.mobile.models.Sensor
 import tik.prometheus.mobile.repository.RestServiceApi
 import tik.prometheus.mobile.repository.RestServiceHelper
 import tik.prometheus.mobile.repository.SensorDataSource
+import tik.prometheus.mobile.ui.screen.sensor.SensorModel
 
 
-class SensorViewModel(private val restServiceApi: RestServiceApi = RestServiceHelper.createApi()) : ZViewModel() {
+class HomeViewModel(private val restServiceApi: RestServiceApi=RestServiceHelper.createApi()) : ViewModel() {
     val sensors: Flow<PagingData<SensorModel>> = getSensorListStream()
         .map { data ->
             data.map {
@@ -36,8 +36,4 @@ class SensorViewModel(private val restServiceApi: RestServiceApi = RestServiceHe
             SensorDataSource(restServiceApi)
         }.flow
     }
-}
-sealed class SensorModel {
-    data class SensorItem(val sensor: Sensor, var mqttClient: MqttAndroidClient? = null) : SensorModel()
-    data class SeparatorItem(val description: String) : SensorModel()
 }

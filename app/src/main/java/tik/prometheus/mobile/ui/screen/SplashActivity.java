@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import tik.prometheus.mobile.Configs;
 import tik.prometheus.mobile.R;
+import tik.prometheus.mobile.ZApplication;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
@@ -21,9 +22,12 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
                 Configs.INSTANCE.initConfig();
+                ZApplication zApplication = (ZApplication) getApplication();
+                zApplication.initContainer();
                 SplashActivity.this.startActivity(mainIntent);
             }
         }).start();
+
 
 //        new Handler().postDelayed(new Runnable(){
 //            @Override

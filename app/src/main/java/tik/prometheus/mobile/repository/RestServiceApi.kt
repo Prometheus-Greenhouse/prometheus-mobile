@@ -4,7 +4,9 @@ import io.reactivex.Single
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 import retrofit2.http.QueryMap
+import tik.prometheus.mobile.models.Actuator
 import tik.prometheus.mobile.models.Page
 import tik.prometheus.mobile.models.Sensor
 import tik.prometheus.rest.models.Farm
@@ -12,11 +14,6 @@ import tik.prometheus.rest.models.Greenhouse
 
 interface RestServiceApi {
 
-    @GET("/sensors")
-    suspend fun getSensors(@QueryMap pageable: Map<String, String>): Response<Page<Sensor>>
-
-    @GET("/sensors/{id}")
-    suspend fun getSensor(@Path("id") id: Long): Response<Sensor>
 
     @GET("/farms")
     suspend fun aGetFarms(@QueryMap pageable: Map<String, String>): Response<Page<Farm>>
@@ -29,4 +26,17 @@ interface RestServiceApi {
 
     @GET("/greenhouses/{id}")
     suspend fun getGreenhouse(@Path("id") id: Long): Response<Greenhouse>
+
+    @GET("/sensors")
+    suspend fun getSensors(@QueryMap pageable: Map<String, String>): Response<Page<Sensor>>
+
+    @GET("/sensors/{id}")
+    suspend fun getSensor(@Path("id") id: Long): Response<Sensor>
+
+    @GET("/actuators")
+    suspend fun getActuators(@QueryMap pageable: Map<String, String>, @Query("greenhouseId") greenhouseId: Long? = null): Response<Page<Actuator>>
+
+    @GET("/actuators/{id}")
+    suspend fun getActuator(@Path("id") id: Long): Response<Actuator>
+
 }

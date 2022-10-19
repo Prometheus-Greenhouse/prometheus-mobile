@@ -161,6 +161,7 @@
                 android:layout_height="40dp"
         >
             <ImageView
+                    android:id="@+id/btnSensorCount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="SensorCount"
@@ -181,6 +182,7 @@
                 android:layout_height="40dp"
         >
             <ImageView
+                    android:id="@+id/btnActuatorCount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="ActuatorCount"

@@ -30,8 +30,8 @@ class GreenhouseAdapter(var parent: NestableFragment<GreenhouseModel.GreenhouseI
                 }
 
                 is GreenhouseModel.SeparatorItem -> {
-                    val viewHolder = holder as GreenhouseSeparatorViewHolder
-                    viewHolder.greenhouseItemSeperatorBinding.separatorDescription.text = greenhouseModel.description
+                    val viewHolder = holder as SeparatorViewHolder
+                    viewHolder.itemSeperatorBinding.separatorDescription.text = greenhouseModel.description
                 }
 
                 else -> {}
@@ -50,13 +50,11 @@ class GreenhouseAdapter(var parent: NestableFragment<GreenhouseModel.GreenhouseI
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             R.layout.item_paging_greenhouse -> GreenhouseViewHolder(ItemPagingGreenhouseBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            else -> GreenhouseSeparatorViewHolder(ItemPagingSeperatorBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            else -> SeparatorViewHolder(ItemPagingSeperatorBinding.inflate(LayoutInflater.from(parent.context), parent, false))
         }
     }
 
     class GreenhouseViewHolder(val ghItemBinding: ItemPagingGreenhouseBinding) : RecyclerView.ViewHolder(ghItemBinding.root)
-
-    class GreenhouseSeparatorViewHolder(val greenhouseItemSeperatorBinding: ItemPagingSeperatorBinding) : RecyclerView.ViewHolder(greenhouseItemSeperatorBinding.root)
 
     object GreenhouseComparator : DiffUtil.ItemCallback<GreenhouseModel>() {
         override fun areItemsTheSame(oldItem: GreenhouseModel, newItem: GreenhouseModel): Boolean {
