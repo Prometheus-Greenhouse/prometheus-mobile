@@ -28,4 +28,6 @@
     <string name="username">Username</string>
     <string name="state_id">state_id</string>
     <string name="state_name">state_name</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
 </resources>

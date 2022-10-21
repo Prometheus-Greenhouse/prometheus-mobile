@@ -2,10 +2,7 @@ package tik.prometheus.mobile.repository
 
 import io.reactivex.Single
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
-import retrofit2.http.QueryMap
+import retrofit2.http.*
 import tik.prometheus.mobile.models.Actuator
 import tik.prometheus.mobile.models.Page
 import tik.prometheus.mobile.models.Sensor
@@ -38,5 +35,8 @@ interface RestServiceApi {
 
     @GET("/actuators/{id}")
     suspend fun getActuator(@Path("id") id: Long): Response<Actuator>
+
+    @PATCH("/actuators/{id}")
+    suspend fun patchActuator(@Path("id") id: Long, @Body nextState: Actuator.ActuatorState): Response<Void>
 
 }
