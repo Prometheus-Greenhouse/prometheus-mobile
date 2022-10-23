@@ -8,7 +8,7 @@ import tik.prometheus.mobile.ZViewModel
 import tik.prometheus.mobile.models.Sensor
 import tik.prometheus.mobile.repository.RestServiceApi
 import tik.prometheus.mobile.repository.RestServiceHelper
-import tik.prometheus.mobile.utils.Utils
+import tik.prometheus.mobile.utils.*
 
 
 class SensorDetailViewModel constructor(
@@ -18,6 +18,7 @@ class SensorDetailViewModel constructor(
     constructor(args: Map<String, Any>) : this(args, RestServiceHelper.createApi())
 
     var sensor: MutableLiveData<Sensor> = MutableLiveData()
+//    var units: MutableLiveData<ArrayList<UnitModel>> = MutableLiveData(arrayListOf())
 
     init {
         val sensorId = args[Utils.KEY_SENSOR_ID] as Long
@@ -30,6 +31,35 @@ class SensorDetailViewModel constructor(
                 }
             }
         }
+//        getUnits()
     }
 
+//    fun getUnits() {
+//        val units = EUnit.values();
+//        val groups = UnitGroup.values()
+//
+//        val unitModels = arrayListOf<UnitModel>()
+//        for (g in groups) {
+//            unitModels.add(UnitModel.GroupItem(g))
+//            // ANY
+//            val items = units.filter { it.group == g && it.system == UnitSystem.ANY }.map { UnitModel.UnitItem(it) }
+//            unitModels.addAll(items)
+//
+//            // Imperial
+//            val imperialItems = units.filter { it.group == g && it.system == UnitSystem.IMPERIAL }.map { UnitModel.UnitItem(it) }
+//            if (imperialItems.isNotEmpty()) {
+//                unitModels.add(UnitModel.SystemItem(UnitSystem.IMPERIAL))
+//                unitModels.addAll(imperialItems)
+//            }
+//
+//            // Metric
+//            val metricItems = units.filter { it.group == g && it.system == UnitSystem.METRIC }.map { UnitModel.UnitItem(it) }
+//            if (metricItems.isNotEmpty()) {
+//                unitModels.add(UnitModel.SystemItem(UnitSystem.METRIC))
+//                unitModels.addAll(metricItems)
+//            }
+//
+//        }
+//        this.units.postValue(unitModels)
+//    }
 }

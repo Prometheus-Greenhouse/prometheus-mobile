@@ -1,5 +1,7 @@
 package tik.prometheus.mobile.utils
 
+import ir.mirrajabi.searchdialog.core.Searchable
+
 enum class UnitSystem(val value: String) {
     IMPERIAL("Imperial"),
     METRIC("Metric"),
@@ -111,5 +113,59 @@ enum class EUnit(val value: String, val annotate: String, val system: UnitSystem
     KILOPASCAL("Kilopascal", "kPa", UnitSystem.ANY, UnitGroup.OTHER),
     PRESSURE_KGM("Pressure", "kg/m²", UnitSystem.ANY, UnitGroup.OTHER),
     PRESSURE_BAR("Pressure", "bar", UnitSystem.ANY, UnitGroup.OTHER),
-    AIR("Air Quality Index", "AQI", UnitSystem.ANY, UnitGroup.OTHER),
+    AIR("Air Quality Index", "AQI", UnitSystem.ANY, UnitGroup.OTHER);
+
+    companion object {
+        fun getModels(): ArrayList<UnitModel> {
+            val units = EUnit.values();
+            val groups = UnitGroup.values()
+
+            val unitModels = arrayListOf<UnitModel>()
+            for (g in groups) {
+                unitModels.add(UnitModel.GroupItem(g))
+                // ANY
+                val items = units.filter { it.group == g && it.system == UnitSystem.ANY }.map { UnitModel.UnitItem(it) }
+                unitModels.addAll(items)
+
+                // Imperial
+                val imperialItems = units.filter { it.group == g && it.system == UnitSystem.IMPERIAL }.map { UnitModel.UnitItem(it) }
+                if (imperialItems.isNotEmpty()) {
+                    unitModels.add(UnitModel.SystemItem(UnitSystem.IMPERIAL))
+                    unitModels.addAll(imperialItems)
+                }
+
+                // Metric
+                val metricItems = units.filter { it.group == g && it.system == UnitSystem.METRIC }.map { UnitModel.UnitItem(it) }
+                if (metricItems.isNotEmpty()) {
+                    unitModels.add(UnitModel.SystemItem(UnitSystem.METRIC))
+                    unitModels.addAll(metricItems)
+                }
+            }
+            return unitModels
+        }
+    }
+}
+
+
+sealed class UnitModel : Searchable {
+    data class UnitItem(val unit: EUnit) : UnitModel() {
+
+        override fun getTitle(): String {
+            return "\t %s, %s".format(unit.value, unit.annotate)
+        }
+    }
+
+    data class GroupItem(val group: UnitGroup) : UnitModel() {
+
+        override fun getTitle(): String {
+            return group.value
+        }
+    }
+
+    data class SystemItem(val system: UnitSystem) : UnitModel() {
+        override fun getTitle(): String {
+            return "-- %s".format(system.value)
+        }
+
+    }
 }

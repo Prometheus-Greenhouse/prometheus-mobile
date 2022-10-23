@@ -30,4 +30,6 @@
     <string name="state_name">state_name</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

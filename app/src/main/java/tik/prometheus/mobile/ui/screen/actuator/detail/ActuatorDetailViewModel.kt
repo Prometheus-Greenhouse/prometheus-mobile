@@ -10,12 +10,24 @@ import kotlinx.coroutines.launch
 import tik.prometheus.mobile.ZViewModel
 import tik.prometheus.mobile.models.Actuator
 import tik.prometheus.mobile.repository.ActuatorRepository
-import tik.prometheus.mobile.utils.toExcept
+import tik.prometheus.mobile.utils.*
 
 class ActuatorDetailViewModel(private val actuatorRepository: ActuatorRepository) : ZViewModel() {
     var loadState: MutableLiveData<LoadState> = MutableLiveData()
     var actuator: MutableLiveData<Actuator> = MutableLiveData()
     var isRunning: MutableLiveData<Boolean> = MutableLiveData(false)
+    var units: MutableLiveData<List<UnitModel>> = MutableLiveData(mutableListOf())
+    fun getUnits() {
+        val units = EUnit.values();
+        val groups = UnitGroup.values()
+        val systems = UnitSystem.values()
+        val unitItems = mutableListOf<UnitModel>()
+        for (g in groups) {
+            unitItems.add(UnitModel.GroupItem(g))
+            unitItems.addAll(units.filter { it.group == g }.map { UnitModel.UnitItem(it) })
+        }
+        this.units.postValue(unitItems)
+    }
 
     fun getActuatorDetail(id: Long) {
         loadState.postValue(LoadState.Loading)
@@ -58,5 +70,4 @@ class ActuatorDetailViewModel(private val actuatorRepository: ActuatorRepository
             return ActuatorDetailViewModel(actuatorRepository) as T
         }
     }
-
 }

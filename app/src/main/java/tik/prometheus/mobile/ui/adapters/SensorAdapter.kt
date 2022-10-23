@@ -5,13 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import tik.prometheus.mobile.NestableFragment
 import tik.prometheus.mobile.R
+import tik.prometheus.mobile.ZPagingDataAdapter
 import tik.prometheus.mobile.databinding.ItemPagingSensorBinding
 import tik.prometheus.mobile.databinding.ItemPagingSeperatorBinding
 import tik.prometheus.mobile.services.MqttHelper
 import tik.prometheus.mobile.services.MqttSensorViewHolder
-import tik.prometheus.mobile.NestableFragment
-import tik.prometheus.mobile.ZPagingDataAdapter
 import tik.prometheus.mobile.ui.screen.sensor.SensorModel
 
 class SensorAdapter(var parent: NestableFragment<SensorModel.SensorItem>) : ZPagingDataAdapter<SensorModel, RecyclerView.ViewHolder>(SensorComparator) {
@@ -33,8 +33,8 @@ class SensorAdapter(var parent: NestableFragment<SensorModel.SensorItem>) : ZPag
                 }
 
                 is SensorModel.SeparatorItem -> {
-                    val viewHolder = holder as SensorSeparatorViewHolder
-                    viewHolder.movieItemSeperatorBinding.separatorDescription.text = sensorModel.description
+                    val viewHolder = holder as SeparatorViewHolder
+                    viewHolder.itemSeperatorBinding.separatorDescription.text = sensorModel.description
                 }
 
                 else -> {}
@@ -52,19 +52,13 @@ class SensorAdapter(var parent: NestableFragment<SensorModel.SensorItem>) : ZPag
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.item_paging_sensor -> {
-                SensorViewHolder(
-                    ItemPagingSensorBinding
-                        .inflate(LayoutInflater.from(parent.context), parent, false)
-                )
-            }
+            R.layout.item_paging_sensor -> SensorViewHolder(
+                ItemPagingSensorBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            )
 
-            else -> {
-                SensorSeparatorViewHolder(
-                    ItemPagingSeperatorBinding
-                        .inflate(LayoutInflater.from(parent.context), parent, false)
-                )
-            }
+            else -> SeparatorViewHolder(
+                ItemPagingSeperatorBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            )
         }
     }
 
@@ -74,8 +68,6 @@ class SensorAdapter(var parent: NestableFragment<SensorModel.SensorItem>) : ZPag
         }
 
     }
-
-    class SensorSeparatorViewHolder(val movieItemSeperatorBinding: ItemPagingSeperatorBinding) : RecyclerView.ViewHolder(movieItemSeperatorBinding.root)
 
     object SensorComparator : DiffUtil.ItemCallback<SensorModel>() {
         override fun areItemsTheSame(oldItem: SensorModel, newItem: SensorModel): Boolean {
