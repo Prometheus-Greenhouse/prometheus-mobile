@@ -11,7 +11,6 @@ import tik.prometheus.mobile.ZApplication;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
-    private final int SPLASH_DISPLAY_LENGHT = 3000;            //set your time here......
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {

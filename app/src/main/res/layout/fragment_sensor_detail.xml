@@ -68,26 +68,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-            <TextView android:id="@+id/txtFarmLabel"
-                      android:layout_width="wrap_content"
-                      android:textSize="20sp"
-                      android:layout_height="wrap_content"
-                      android:layout_marginEnd="5dp"
-                      android:text="Farm: "/>
-            <TextView android:id="@+id/txtFarmValue"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
             <TextView android:id="@+id/txtGreenhouseLabel"
                       android:layout_width="wrap_content"
                       android:textSize="20sp"
                       android:layout_height="wrap_content"
                       android:layout_marginEnd="5dp"
-                      android:text="Greenhouse: "/>
+                      android:text="Greenhouse:"/>
             <TextView android:id="@+id/txtGreenhouseValue"
                       android:textSize="20sp"
                       android:layout_width="wrap_content"
@@ -102,8 +88,24 @@
                       android:textSize="20sp"
                       android:layout_height="wrap_content"
                       android:layout_marginEnd="5dp"
-                      android:text="Id: "/>
+                      android:text="Id:"/>
             <TextView android:id="@+id/txtIdValue"
+                      android:textSize="20sp"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+                android:id="@+id/llLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <TextView
+                      android:layout_width="wrap_content"
+                      android:textSize="20sp"
+                      android:layout_height="wrap_content"
+                      android:layout_marginEnd="5dp"
+                      android:text="Label:"/>
+            <TextView android:id="@+id/txtLabelValue"
                       android:textSize="20sp"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"/>
@@ -117,7 +119,7 @@
                       android:textSize="20sp"
                       android:layout_height="wrap_content"
                       android:layout_marginEnd="5dp"
-                      android:text="Local id: "/>
+                      android:text="Local id:"/>
             <TextView android:id="@+id/txtLocalIdValue"
                       android:textSize="20sp"
                       android:layout_width="wrap_content"
@@ -133,7 +135,7 @@
                       android:textSize="20sp"
                       android:layout_height="wrap_content"
                       android:layout_marginEnd="5dp"
-                      android:text="Type: "/>
+                      android:text="Type:"/>
             <TextView android:id="@+id/txtTypeValue"
                       android:textSize="20sp"
                       android:layout_width="wrap_content"
@@ -150,7 +152,7 @@
                       android:textSize="20sp"
                       android:layout_height="wrap_content"
                       android:layout_marginEnd="5dp"
-                      android:text="Unit: "/>
+                      android:text="Unit:"/>
             <TextView android:id="@+id/txtUnitValue"
                       android:textSize="20sp"
                       android:layout_width="wrap_content"

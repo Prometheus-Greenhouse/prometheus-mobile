@@ -6,7 +6,7 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import tik.prometheus.mobile.models.Sensor
 
-class SensorRepository(private val sensorDataSource: SensorDataSource) {
+class SensorRepository(private val sensorDataSource: SensorDataSource, val restServiceApi: RestServiceApi) {
 
     fun getSensorListStream(greenhouseId: Long? = null): Flow<PagingData<Sensor>> {
         sensorDataSource.greenhouseId = greenhouseId

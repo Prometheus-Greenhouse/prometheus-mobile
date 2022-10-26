@@ -115,6 +115,10 @@ enum class EUnit(val value: String, val annotate: String, val system: UnitSystem
     PRESSURE_BAR("Pressure", "bar", UnitSystem.ANY, UnitGroup.OTHER),
     AIR("Air Quality Index", "AQI", UnitSystem.ANY, UnitGroup.OTHER);
 
+    override fun toString(): String {
+        return "\t %s, %s".format(value, annotate)
+    }
+
     companion object {
         fun getModels(): ArrayList<UnitModel> {
             val units = EUnit.values();
@@ -151,7 +155,7 @@ sealed class UnitModel : Searchable {
     data class UnitItem(val unit: EUnit) : UnitModel() {
 
         override fun getTitle(): String {
-            return "\t %s, %s".format(unit.value, unit.annotate)
+            return unit.toString()
         }
     }
 

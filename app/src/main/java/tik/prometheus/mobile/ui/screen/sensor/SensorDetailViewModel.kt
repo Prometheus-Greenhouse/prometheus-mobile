@@ -1,65 +1,55 @@
 package tik.prometheus.mobile.ui.screen.sensor
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import tik.prometheus.mobile.ZViewModel
 import tik.prometheus.mobile.models.Sensor
-import tik.prometheus.mobile.repository.RestServiceApi
-import tik.prometheus.mobile.repository.RestServiceHelper
-import tik.prometheus.mobile.utils.*
+import tik.prometheus.mobile.models.toSensorReq
+import tik.prometheus.mobile.repository.SensorRepository
+import tik.prometheus.mobile.utils.ZLoadState
+import tik.prometheus.mobile.utils.toExcept
 
 
-class SensorDetailViewModel constructor(
-    args: Map<String, Any>,
-    restServiceApi: RestServiceApi
-) : ZViewModel() {
-    constructor(args: Map<String, Any>) : this(args, RestServiceHelper.createApi())
+class SensorDetailViewModel(private val sensorRepository: SensorRepository) : ZViewModel() {
+    var sensorId: MutableLiveData<Long> = MutableLiveData()
 
     var sensor: MutableLiveData<Sensor> = MutableLiveData()
-//    var units: MutableLiveData<ArrayList<UnitModel>> = MutableLiveData(arrayListOf())
+    var loadState: MutableLiveData<ZLoadState> = MutableLiveData(ZLoadState.NOT_LOADING)
 
-    init {
-        val sensorId = args[Utils.KEY_SENSOR_ID] as Long
-        restServiceApi.let {
-            viewModelScope.launch(Dispatchers.IO) {
-                val res = it.getSensor(sensorId)
-                println(res.body())
-                if (res.isSuccessful) {
-                    sensor.postValue(res.body())
-                }
+
+    fun loadSensor() {
+        var state = ZLoadState.Loading()
+        viewModelScope.launch(Dispatchers.IO) {
+            val res = sensorRepository.restServiceApi.getSensor(sensorId.value!!)
+            println(res.body())
+            if (res.isSuccessful) {
+                sensor.postValue(res.body())
             }
         }
-//        getUnits()
     }
 
-//    fun getUnits() {
-//        val units = EUnit.values();
-//        val groups = UnitGroup.values()
-//
-//        val unitModels = arrayListOf<UnitModel>()
-//        for (g in groups) {
-//            unitModels.add(UnitModel.GroupItem(g))
-//            // ANY
-//            val items = units.filter { it.group == g && it.system == UnitSystem.ANY }.map { UnitModel.UnitItem(it) }
-//            unitModels.addAll(items)
-//
-//            // Imperial
-//            val imperialItems = units.filter { it.group == g && it.system == UnitSystem.IMPERIAL }.map { UnitModel.UnitItem(it) }
-//            if (imperialItems.isNotEmpty()) {
-//                unitModels.add(UnitModel.SystemItem(UnitSystem.IMPERIAL))
-//                unitModels.addAll(imperialItems)
-//            }
-//
-//            // Metric
-//            val metricItems = units.filter { it.group == g && it.system == UnitSystem.METRIC }.map { UnitModel.UnitItem(it) }
-//            if (metricItems.isNotEmpty()) {
-//                unitModels.add(UnitModel.SystemItem(UnitSystem.METRIC))
-//                unitModels.addAll(metricItems)
-//            }
-//
-//        }
-//        this.units.postValue(unitModels)
-//    }
+    fun saveSensor() {
+        loadState.postValue(ZLoadState.LOADING)
+        println(sensor.value.toString())
+        viewModelScope.launch(Dispatchers.IO) {
+            val res = sensorRepository.restServiceApi.putSensor(sensorId.value!!, sensor.value!!.toSensorReq())
+            if (res.isSuccessful) {
+                loadState.postValue(ZLoadState.NOT_LOADING)
+                sensor.postValue(res.body())
+            } else {
+                val except = res.toExcept()
+                loadState.postValue(ZLoadState.Error(Exception(except.message)))
+            }
+        }
+    }
+
+    class Factory(val sensorRepository: SensorRepository) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return SensorDetailViewModel(sensorRepository) as T
+        }
+    }
 }

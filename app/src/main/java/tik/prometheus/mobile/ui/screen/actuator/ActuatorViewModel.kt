@@ -13,7 +13,7 @@ import tik.prometheus.mobile.models.Actuator
 import tik.prometheus.mobile.repository.ActuatorRepository
 
 class ActuatorViewModel(private val actuatorRepository: ActuatorRepository) : ZViewModel() {
-    val greenhouseId: MutableLiveData<Long> = MutableLiveData(null)
+    val greenhouseId: MutableLiveData<Long> = MutableLiveData()
     lateinit var actuators: Flow<PagingData<ActuatorModel>>
 
     fun loadActuators() {

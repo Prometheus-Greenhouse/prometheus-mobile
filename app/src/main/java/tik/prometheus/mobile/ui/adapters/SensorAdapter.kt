@@ -22,10 +22,10 @@ class SensorAdapter(var parent: NestableFragment<SensorModel.SensorItem>) : ZPag
                 is SensorModel.SensorItem -> {
                     val viewHolder = holder as SensorViewHolder
                     sensorModel.mqttClient = MqttHelper.createSensorListener(viewHolder.sensorItemBinding.root.context, sensorModel.sensor.topic, viewHolder);
-                    viewHolder.sensorItemBinding.txtId.text = "%s-%s".format(sensorModel.sensor.id, sensorModel.sensor.localId)
-                    viewHolder.sensorItemBinding.txtSensorType.text = sensorModel.sensor.type
+                    viewHolder.sensorItemBinding.txtId.text = "%s-%s".format(sensorModel.sensor.id, sensorModel.sensor.label.toString())
+                    viewHolder.sensorItemBinding.txtSensorType.text = sensorModel.sensor.type?.value
                     viewHolder.sensorItemBinding.value.text = "0"
-                    viewHolder.sensorItemBinding.unit.text = sensorModel.sensor.unit
+                    viewHolder.sensorItemBinding.unit.text = sensorModel.sensor.unit?.annotate
 
                     holder.itemView.setOnClickListener(View.OnClickListener {
                         parent.insertNestedFragment(sensorModel)

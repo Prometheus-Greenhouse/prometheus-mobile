@@ -6,6 +6,7 @@ import retrofit2.http.*
 import tik.prometheus.mobile.models.Actuator
 import tik.prometheus.mobile.models.Page
 import tik.prometheus.mobile.models.Sensor
+import tik.prometheus.mobile.models.SensorReq
 import tik.prometheus.rest.models.Farm
 import tik.prometheus.rest.models.Greenhouse
 
@@ -29,6 +30,9 @@ interface RestServiceApi {
 
     @GET("/sensors/{id}")
     suspend fun getSensor(@Path("id") id: Long): Response<Sensor>
+
+    @PUT("/sensors/{id}")
+    suspend fun putSensor(@Path("id") id: Long, @Body sensor: SensorReq): Response<Sensor>
 
     @GET("/actuators")
     suspend fun getActuators(@QueryMap pageable: Map<String, String>, @Query("greenhouseId") greenhouseId: Long? = null): Response<Page<Actuator>>

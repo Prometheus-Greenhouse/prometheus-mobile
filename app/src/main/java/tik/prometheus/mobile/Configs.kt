@@ -1,5 +1,6 @@
 package tik.prometheus.mobile
 
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -8,6 +9,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import tik.prometheus.mobile.utils.Utils
+import java.util.concurrent.TimeUnit
 
 object Configs {
     var TAG = Configs::class.java.toString()
@@ -18,8 +20,10 @@ object Configs {
     private var loaded: Boolean = false
 
     fun initConfig() {
+        var client = OkHttpClient().newBuilder().callTimeout(60, TimeUnit.SECONDS).build()
         val builder = Retrofit.Builder()
             .baseUrl(CONFIG_URI)
+            .client(client)
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

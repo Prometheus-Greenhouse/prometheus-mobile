@@ -11,7 +11,6 @@ class ActuatorRepository(private val actuatorDataSource: ActuatorDataSource, val
 
     fun getActuatorListStream(greenhouseId: Long? = null): Flow<PagingData<Actuator>> {
         actuatorDataSource.greenhouseId = greenhouseId
-        println(TAG + greenhouseId)
         return Pager(PagingConfig(20)) { actuatorDataSource }.flow
     }
 
