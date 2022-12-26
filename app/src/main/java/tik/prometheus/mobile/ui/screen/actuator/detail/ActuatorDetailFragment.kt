@@ -297,7 +297,6 @@ class ActuatorDetailFragment : ZFragment(), MqttSensorViewHolder {
             }
 
             viewModel.actuator.value?.topic -> {
-                println("topic$topic:$value %s".format(value == "1"))
                 viewModel.postRunning(value == "1")
             }
         }
