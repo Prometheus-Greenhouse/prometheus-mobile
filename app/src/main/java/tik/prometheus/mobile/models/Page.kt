@@ -1,5 +1,6 @@
 package tik.prometheus.mobile.models
 
+import tik.prometheus.mobile.utils.Utils
 import tik.prometheus.rest.models.Farm
 
 class Page<T>(
@@ -18,4 +19,5 @@ class Page<T>(
         var pageNumber: Int = 0,
         var pageSize: Int = 10,
     )
+    override fun toString(): String = Utils.reflectionToString(this)
 }

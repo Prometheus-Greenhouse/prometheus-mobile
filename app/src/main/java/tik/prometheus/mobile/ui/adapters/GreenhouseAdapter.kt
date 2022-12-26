@@ -21,8 +21,8 @@ class GreenhouseAdapter(var parent: NestableFragment<GreenhouseModel.GreenhouseI
                     val viewHolder = holder as GreenhouseViewHolder
                     val greenhouse = greenhouseModel.greenhouse
                     viewHolder.ghItemBinding.txtGreenhouseId.text = greenhouse.id.toString()
-                    // TODO viewHolder.ghItemBinding.txtGreenhouseLabel.text = g.
                     viewHolder.ghItemBinding.txtGreenhouseType.text = greenhouse.type
+                    viewHolder.ghItemBinding.txtGreenhouseLabel.text = greenhouse.label
 
                     holder.itemView.setOnClickListener(View.OnClickListener {
                         parent.insertNestedFragment(greenhouseModel)

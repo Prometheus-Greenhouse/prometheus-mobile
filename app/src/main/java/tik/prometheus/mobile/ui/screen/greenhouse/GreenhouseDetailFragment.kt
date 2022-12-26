@@ -55,8 +55,7 @@ class GreenhouseDetailFragment : ZFragment() {
             binding.txtId.text = it.id.toString()
             binding.txtFarm.text = it.farmId.toString()
             binding.txtType.text = it.type
-            // TODO
-            // binding.txtTitle = greenhouse.title
+            binding.txtLabel.text = it.label
             binding.txtArea.text = it.area.toString()
             binding.txtCultivationArea.text = it.cultivationArea.toString()
             binding.txtHeight.text = it.height.toString()

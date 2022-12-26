@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto" android:padding="5dp">
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".ui.screen.actuator.detail.ActuatorDetailFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+>
     <LinearLayout
             android:id="@+id/llActuatorInfo"
             android:orientation="vertical"
@@ -47,6 +53,7 @@
                     android:layout_height="wrap_content"/>
         </LinearLayout>
         <LinearLayout
+                android:id="@+id/llType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -66,6 +73,7 @@
         </LinearLayout>
 
         <LinearLayout
+                android:id="@+id/llLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -74,7 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:text="Actuator:"
+                    android:text="Label:"
                     android:paddingRight="5dp"
             />
             <TextView
@@ -85,6 +93,7 @@
         </LinearLayout>
 
         <LinearLayout
+                android:id="@+id/llNorth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -104,6 +113,7 @@
         </LinearLayout>
 
         <LinearLayout
+                android:id="@+id/llWest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -129,14 +139,10 @@
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@+id/llActuatorInfo"
             app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_margin="5dp"
+            android:background="@drawable/panel"
     >
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Auto run on sensor value"
-                android:textSize="20sp"
-                android:gravity="center"
-        />
+
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -144,106 +150,155 @@
                 android:orientation="horizontal"
         >
             <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:text="Auto run on:"
                     android:textSize="20sp"
-                    android:text="Sensor Id:"
-                    android:paddingRight="5dp"
+                    android:gravity="right"
+                    android:layout_marginRight="5dp"
             />
             <TextView
-                    android:id="@+id/txtSensorId"
+                    android:id="@+id/txtRunOn"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:text="@string/sensor_value"
+            />
         </LinearLayout>
         <LinearLayout
+                android:id="@+id/lnSensorTask"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-        >
-            <TextView
-                    android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <LinearLayout
+                    android:id="@+id/llSensorId"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="Sensor local id:"
-                    android:paddingRight="5dp"
-            />
-            <TextView
-                    android:id="@+id/txtSensorLocalId"
-                    android:textSize="20sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-        >
-            <TextView
-                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+            >
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="Sensor Id:"
+                        android:paddingRight="5dp"
+                />
+                <TextView
+                        android:id="@+id/txtSensorId"
+                        android:textSize="20sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="Sensor type:"
-                    android:paddingRight="5dp"
-            />
-            <TextView
-                    android:id="@+id/txtSensorType"
-                    android:textSize="20sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-        >
-            <TextView
-                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+            >
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="Sensor label:"
+                        android:paddingRight="5dp"
+                />
+                <TextView
+                        android:id="@+id/txtSensorLabel"
+                        android:textSize="20sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="Sensor unit:"
-                    android:paddingRight="5dp"
-            />
-            <TextView
-                    android:id="@+id/txtSensorUnit"
-                    android:textSize="20sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
+                    android:orientation="horizontal"
+            >
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="Sensor type:"
+                        android:paddingRight="5dp"
+                />
+                <TextView
+                        android:id="@+id/txtSensorType"
+                        android:textSize="20sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+            >
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="Sensor unit:"
+                        android:paddingRight="5dp"
+                />
+                <TextView
+                        android:id="@+id/txtSensorUnit"
+                        android:textSize="20sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-        >
-            <TextView
-                    android:layout_width="wrap_content"
+            <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="Sensor target value:"
-                    android:paddingRight="5dp"
-            />
-            <TextView
-                    android:id="@+id/txtSensorTargetValueFrom"
-                    android:textSize="22sp"
-                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+            >
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="Sensor value:"
+                        android:paddingRight="5dp"
+                />
+                <TextView
+                        android:id="@+id/txtSensorValue"
+                        android:textSize="20sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                />
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="000"
-                    android:paddingRight="5dp"
-            />
-            <TextView
-                    android:textSize="20sp"
-                    android:text="to"
-                    android:paddingRight="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            <TextView
-                    android:id="@+id/txtSensorTargetValueTo"
-                    android:textSize="22sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="000"
-            />
+                    android:orientation="horizontal"
+            >
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="Sensor target value:"
+                        android:paddingRight="5dp"
+                />
+                <TextView
+                        android:id="@+id/txtSensorTargetValueFrom"
+                        android:textSize="22sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="000"
+                        android:paddingRight="5dp"
+                />
+                <TextView
+                        android:textSize="20sp"
+                        android:text="to"
+                        android:paddingRight="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                <TextView
+                        android:id="@+id/txtSensorTargetValueTo"
+                        android:textSize="22sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="000"
+                />
+            </LinearLayout>
         </LinearLayout>
 
 

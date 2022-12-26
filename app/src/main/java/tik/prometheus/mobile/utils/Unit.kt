@@ -21,6 +21,8 @@ enum class UnitGroup(val value: String) {
 }
 
 enum class EUnit(val value: String, val annotate: String, val system: UnitSystem, val group: UnitGroup) {
+    NaN("NaN", "NaN", UnitSystem.ANY, UnitGroup.OTHER),
+
     INCH("Inch", "in", UnitSystem.IMPERIAL, UnitGroup.LENGTH_DISTANCE),
     FOOT("Foot", "ft", UnitSystem.IMPERIAL, UnitGroup.LENGTH_DISTANCE),
     YARD("Yard", "yd", UnitSystem.IMPERIAL, UnitGroup.LENGTH_DISTANCE),

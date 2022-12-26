@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagingData
 import androidx.paging.insertSeparators
 import androidx.paging.map
+import ir.mirrajabi.searchdialog.core.Searchable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.eclipse.paho.android.service.MqttAndroidClient
@@ -48,6 +49,11 @@ class SensorViewModel(private val sensorRepository: SensorRepository) : ZViewMod
 }
 
 sealed class SensorModel {
-    data class SensorItem(val sensor: Sensor, var mqttClient: MqttAndroidClient? = null) : SensorModel()
+    data class SensorItem(val sensor: Sensor, var mqttClient: MqttAndroidClient? = null) : SensorModel(), Searchable {
+        override fun getTitle(): String {
+            return "%s. %s".format(sensor.id, sensor.label)
+        }
+    }
+
     data class SeparatorItem(val description: String) : SensorModel()
 }

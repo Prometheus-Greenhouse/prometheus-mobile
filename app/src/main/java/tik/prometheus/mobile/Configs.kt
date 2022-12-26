@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 
 object Configs {
     var TAG = Configs::class.java.toString()
-    private val CONFIG_URI: String = "https://prometheus-config.herokuapp.com"
+    private val CONFIG_URI: String = "http://192.168.1.3:8000"
     private val CONFIG_NAME: String = "prometheus-mobile"
     private val CONFIG_PROFILE: String = "dev"
     var configs: ConfigProperties? = null

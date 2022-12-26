@@ -77,7 +77,7 @@ class SensorDetailFragment : ZFragment(), MqttSensorViewHolder {
         return binding.root
     }
 
-    override fun updateMqttValue(value: String?) {
+    override fun updateMqttValue(topic: String, value: String?) {
         binding.txtSensorValue.text = value
     }
 

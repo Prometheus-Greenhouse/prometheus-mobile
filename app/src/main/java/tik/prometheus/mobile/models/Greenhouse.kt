@@ -2,6 +2,7 @@ package tik.prometheus.rest.models
 
 import tik.prometheus.mobile.models.Actuator
 import tik.prometheus.mobile.models.Sensor
+import tik.prometheus.mobile.utils.Utils
 
 
 class Greenhouse(
@@ -16,7 +17,9 @@ class Greenhouse(
     var label: String? = null,
     var sensors: List<Sensor> = emptyList(),
     var actuators: List<Actuator> = emptyList()
-)
+){
+    override fun toString(): String = Utils.reflectionToString(this)
+}
 
 class GreenhouseReq(
     var id: Long? = null,
@@ -28,4 +31,6 @@ class GreenhouseReq(
     var width: Float,
     var length: Float,
     var cultivationArea: Float,
-)
+){
+    override fun toString(): String = Utils.reflectionToString(this)
+}

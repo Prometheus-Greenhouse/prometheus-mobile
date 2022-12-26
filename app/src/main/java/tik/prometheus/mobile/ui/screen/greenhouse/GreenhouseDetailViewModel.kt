@@ -1,5 +1,6 @@
 package tik.prometheus.mobile.ui.screen.greenhouse
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -24,6 +25,7 @@ class GreenhouseDetailViewModel(private val greenhouseRepository: GreenhouseRepo
         viewModelScope.launch(Dispatchers.IO) {
             val res = greenhouseRepository.restServiceApi.getGreenhouse(id)
             if (res.isSuccessful) {
+                System.out.println("get greenhouse detail: " + res.body().toString())
                 greenhouse.postValue(res.body())
                 loadState.postValue(LoadState.NotLoading(true))
             } else {
@@ -35,7 +37,7 @@ class GreenhouseDetailViewModel(private val greenhouseRepository: GreenhouseRepo
 
     @Suppress("UNCHECKED_CAST")
     class Factory(private val greenhouseRepository: GreenhouseRepository) : ViewModelProvider.Factory {
-        override fun <T: ViewModel> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return GreenhouseDetailViewModel(greenhouseRepository) as T
         }
     }

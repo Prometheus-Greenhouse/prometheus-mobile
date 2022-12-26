@@ -32,4 +32,8 @@
     <string name="off">OFF</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+
+    <string name="sensor_value"><u>sensor value</u></string>
+    <string name="schedule">Schedule</string>
+    <string name="zero">0</string>
 </resources>

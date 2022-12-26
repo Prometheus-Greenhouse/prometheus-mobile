@@ -15,6 +15,8 @@ import tik.prometheus.mobile.services.MqttSensorViewHolder
 import tik.prometheus.mobile.ui.screen.sensor.SensorModel
 
 class SensorAdapter(var parent: NestableFragment<SensorModel.SensorItem>) : ZPagingDataAdapter<SensorModel, RecyclerView.ViewHolder>(SensorComparator) {
+    var onLongClickListenerFactory: OnLongClickListenerFactory? = null
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val sensorModel = getItem(position)
         sensorModel.let {
@@ -30,6 +32,7 @@ class SensorAdapter(var parent: NestableFragment<SensorModel.SensorItem>) : ZPag
                     holder.itemView.setOnClickListener(View.OnClickListener {
                         parent.insertNestedFragment(sensorModel)
                     })
+                    holder.itemView.setOnLongClickListener(onLongClickListenerFactory?.create(viewHolder, sensorModel))
                 }
 
                 is SensorModel.SeparatorItem -> {
@@ -63,10 +66,14 @@ class SensorAdapter(var parent: NestableFragment<SensorModel.SensorItem>) : ZPag
     }
 
     class SensorViewHolder(val sensorItemBinding: ItemPagingSensorBinding) : RecyclerView.ViewHolder(sensorItemBinding.root), MqttSensorViewHolder {
-        override fun updateMqttValue(value: String) {
+        override fun updateMqttValue(topic: String, value: String) {
             sensorItemBinding.value.text = value
         }
 
+    }
+
+    interface OnLongClickListenerFactory {
+        fun create(viewHolder: SensorViewHolder, sensorModel: SensorModel.SensorItem): View.OnLongClickListener
     }
 
     object SensorComparator : DiffUtil.ItemCallback<SensorModel>() {

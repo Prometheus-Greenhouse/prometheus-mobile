@@ -18,12 +18,12 @@ public class MqttHelper {
         mqttAndroidClient.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
-                viewHolder.updateMqttValue("NaN");
+                viewHolder.updateMqttValue(null, "NaN");
             }
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                viewHolder.updateMqttValue(message.toString());
+                viewHolder.updateMqttValue(topic, message.toString());
             }
 
             @Override
@@ -35,7 +35,7 @@ public class MqttHelper {
             mqttAndroidClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-//                    Log.i(TAG, "connect succeed: " + topic);
+                    Log.i(TAG, "connect succeed: " + topic);
                     try {
                         mqttAndroidClient.subscribe(topic, 0, null, new IMqttActionListener() {
                             @Override

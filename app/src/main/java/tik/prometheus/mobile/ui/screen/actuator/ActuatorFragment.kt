@@ -1,6 +1,7 @@
 package tik.prometheus.mobile.ui.screen.actuator
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import tik.prometheus.mobile.ui.adapters.ActuatorAdapter
 import tik.prometheus.mobile.utils.Utils
 
 class ActuatorFragment : ZFragment(), NestableFragment<ActuatorModel.ActuatorItem> {
+    val TAG = ActuatorFragment::class.java.toString()
     private var _binding: FragmentActuatorBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ActuatorViewModel by viewModels { ActuatorViewModel.Factory(zContainer.actuatorRepository) }
@@ -42,6 +44,7 @@ class ActuatorFragment : ZFragment(), NestableFragment<ActuatorModel.ActuatorIte
 
     override fun insertNestedFragment(model: ActuatorModel.ActuatorItem) {
         val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_container)
+        Log.d(TAG, "insertNestedFragment: "+ model.actuator.id)
         val pair = Pair(Utils.KEY_ACTUATOR_ID, model.actuator.id)
         val args = bundleOf(pair)
         navController.navigate(R.id.nav_actuator_detail, args)

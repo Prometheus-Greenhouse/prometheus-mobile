@@ -3,12 +3,10 @@ package tik.prometheus.mobile.repository
 import io.reactivex.Single
 import retrofit2.Response
 import retrofit2.http.*
-import tik.prometheus.mobile.models.Actuator
-import tik.prometheus.mobile.models.Page
-import tik.prometheus.mobile.models.Sensor
-import tik.prometheus.mobile.models.SensorReq
+import tik.prometheus.mobile.models.*
 import tik.prometheus.rest.models.Farm
 import tik.prometheus.rest.models.Greenhouse
+import java.time.LocalDateTime
 
 interface RestServiceApi {
 
@@ -40,7 +38,21 @@ interface RestServiceApi {
     @GET("/actuators/{id}")
     suspend fun getActuator(@Path("id") id: Long): Response<Actuator>
 
-    @PATCH("/actuators/{id}")
-    suspend fun patchActuator(@Path("id") id: Long, @Body nextState: Actuator.ActuatorState): Response<Void>
+    @PUT("/actuators/{id}")
+    suspend fun putActuator(@Path("id") id: Long, @Body actuator: ActuatorReq): Response<Actuator>
 
+    @PATCH("/actuators/{id}")
+    suspend fun patchActuator(@Path("id") id: Long, @Body nextState: ActuatorState): Response<Void>
+
+    @GET("/sensors/{id}/records")
+    suspend fun getSensorRecords(@Path("id") id: Long, @Query("from") from: LocalDateTime, @Query("to") to: LocalDateTime): Response<List<Float>>
+
+    @GET("/actuators/{id}/tasks")
+    suspend fun getActuatorTask(@Path("id") id: Long): Response<ActuatorTask>
+
+    @POST("/actuators/{id}/tasks")
+    suspend fun postActuatorTask(@Path("id") id: Long, @Body actuatorTask: ActuatorTask): Response<Void>
+
+    @DELETE("/actuators/{id}/tasks")
+    suspend fun deleteActuatorTask(@Path("id") id: Long): Response<Void>
 }

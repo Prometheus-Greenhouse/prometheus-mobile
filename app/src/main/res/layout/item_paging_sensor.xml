@@ -9,11 +9,13 @@
                                    card_view:cardCornerRadius="4dp"
                                    card_view:cardElevation="4dp"
                                    card_view:cardUseCompatPadding="true">
-    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
-                                                       android:layout_height="match_parent"
-                                                       android:background="?android:panelColorBackground"
-                                                       android:padding="5dp"
-                                                       android:orientation="horizontal">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:panelColorBackground"
+            android:padding="5dp"
+            android:orientation="horizontal">
 
         <LinearLayout
                 android:id="@+id/llData"

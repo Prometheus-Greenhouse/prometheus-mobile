@@ -1,68 +1,126 @@
 package tik.prometheus.mobile.ui.screen.actuator.detail
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
+import ir.mirrajabi.searchdialog.core.Searchable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import tik.prometheus.mobile.ZViewModel
-import tik.prometheus.mobile.models.Actuator
+import tik.prometheus.mobile.models.*
 import tik.prometheus.mobile.repository.ActuatorRepository
-import tik.prometheus.mobile.utils.*
+import tik.prometheus.mobile.utils.RunOn
+import tik.prometheus.mobile.utils.ZLoadState
+import tik.prometheus.mobile.utils.toExcept
 
 class ActuatorDetailViewModel(private val actuatorRepository: ActuatorRepository) : ZViewModel() {
-    var loadState: MutableLiveData<LoadState> = MutableLiveData()
+    val TAG = ActuatorDetailViewModel::class.java.toString()
+    var loadState: MutableLiveData<ZLoadState> = MutableLiveData(ZLoadState.NOT_LOADING)
+    var actuatorId: MutableLiveData<Long> = MutableLiveData()
     var actuator: MutableLiveData<Actuator> = MutableLiveData()
+    var actuatorTask: MutableLiveData<ActuatorTask?> = MutableLiveData()
     var isRunning: MutableLiveData<Boolean> = MutableLiveData(false)
-    var units: MutableLiveData<List<UnitModel>> = MutableLiveData(mutableListOf())
-    fun getUnits() {
-        val units = EUnit.values();
-        val groups = UnitGroup.values()
-        val systems = UnitSystem.values()
-        val unitItems = mutableListOf<UnitModel>()
-        for (g in groups) {
-            unitItems.add(UnitModel.GroupItem(g))
-            unitItems.addAll(units.filter { it.group == g }.map { UnitModel.UnitItem(it) })
+    var sensors: MutableLiveData<List<Sensor>> = MutableLiveData(arrayListOf())
+
+    fun fetchSensors(): List<Sensor> {
+        actuator.value?.greenhouse.let {
+            viewModelScope.launch(Dispatchers.IO) {
+                val res = actuatorRepository.restServiceApi.getSensors(
+                    Pageable(page = 0, size = 100).toMap(), actuator.value?.greenhouse?.id
+                );
+                if (res.isSuccessful) {
+                    sensors.postValue(res.body()?.content ?: arrayListOf())
+                }
+            }
         }
-        this.units.postValue(unitItems)
+        return arrayListOf();
     }
 
-    fun getActuatorDetail(id: Long) {
-        loadState.postValue(LoadState.Loading)
+    fun fetchActuatorDetail() {
+        loadState.postValue(ZLoadState.LOADING)
 
         viewModelScope.launch(Dispatchers.IO) {
-            val res = actuatorRepository.restServiceApi.getActuator(id)
+            println("45: fetchActuatorDetail" + actuatorId.value)
+            val res = actuatorRepository.restServiceApi.getActuator(actuatorId.value!!)
             if (res.isSuccessful) {
+                fetchActuatorTask()
                 val actuatorRes = res.body()!!
                 actuator.postValue(actuatorRes)
                 isRunning.postValue(actuatorRes.state.running)
-
-                loadState.postValue(LoadState.NotLoading(true))
+                loadState.postValue(ZLoadState.NOT_LOADING)
             } else {
-                loadState.postValue(LoadState.Error(Exception(res.toExcept().message)))
+                loadState.postValue(ZLoadState.Error(Exception(res.toExcept().message)))
             }
         }
     }
 
+    fun fetchActuatorTask() {
+        Log.d(TAG, "fetchActuatorTask: " + actuatorId.value)
+        viewModelScope.launch(Dispatchers.IO) {
+            val res = actuatorRepository.restServiceApi.getActuatorTask(actuatorId.value!!)
+            if (res.isSuccessful) {
+                actuatorTask.postValue(res.body())
+            } else {
+                actuatorTask.postValue(null)
+            }
+        }
+    }
+
+    fun postRunning(isRunning: Boolean) {
+        this.isRunning.postValue(isRunning)
+    }
+    fun postActuatorTask(actuatorTask: ActuatorTask){
+        this.actuatorTask.postValue(actuatorTask)
+    }
     fun toggleRunning() {
         viewModelScope.launch(Dispatchers.IO) {
             val nextIsRunning = isRunning.value!!.not()
-            val res = actuatorRepository.restServiceApi.patchActuator(
+            actuatorRepository.restServiceApi.patchActuator(
                 actuator.value!!.id,
-                Actuator.ActuatorState(
+                ActuatorState(
                     running = nextIsRunning
                 )
             )
+        }
+    }
 
+    fun saveActuator() {
+        loadState.postValue(ZLoadState.LOADING)
+        viewModelScope.launch(Dispatchers.IO) {
+            println(actuatorId.value)
+            val res = actuatorRepository.restServiceApi.putActuator(actuatorId.value!!, actuator.value!!.toActuatorReq())
+            println(actuator.value)
+            println(res.raw())
             if (res.isSuccessful) {
-                isRunning.postValue(nextIsRunning)
-            } else {
+                if (actuatorTask.value == null) {
+                    val res = actuatorRepository.restServiceApi.deleteActuatorTask(actuatorId.value!!)
+                    println(res.message())
+                    if (!res.isSuccessful) {
+                        val except = res.toExcept()
+                        loadState.postValue(ZLoadState.Error(Exception(except.message)))
+                    }
+                } else {
+                    println(actuatorId.value)
+                    println(actuatorTask.value)
+                    val res = actuatorRepository.restServiceApi.postActuatorTask(actuatorId.value!!, actuatorTask.value!!)
+                    println(res.raw())
+                    if (!res.isSuccessful) {
+                        val except = res.toExcept()
+                        loadState.postValue(ZLoadState.Error(Exception(except.message)))
+                    }
+                }
+                loadState.postValue(ZLoadState.NOT_LOADING)
+                actuator.postValue(res.body())
 
+            } else {
+                val except = res.toExcept()
+                loadState.postValue(ZLoadState.Error(Exception(except.message)))
             }
         }
     }
+
 
     @Suppress("UNCHECKED_CAST")
     class Factory(private val actuatorRepository: ActuatorRepository) : ViewModelProvider.Factory {
@@ -70,4 +128,13 @@ class ActuatorDetailViewModel(private val actuatorRepository: ActuatorRepository
             return ActuatorDetailViewModel(actuatorRepository) as T
         }
     }
+}
+
+sealed class RunOnModel {
+    data class RunOnItem(val value: RunOn) : Searchable {
+        override fun getTitle(): String {
+            return value.name.lowercase().replace("_", " ")
+        }
+    }
+
 }
