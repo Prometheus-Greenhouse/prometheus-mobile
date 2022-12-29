@@ -17,29 +17,28 @@ import tik.prometheus.mobile.utils.Utils
 
 class SensorFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
     val TAG = SensorFragment::class.toString()
-
     private var _binding: FragmentSensorBinding? = null
-
     private val binding get() = _binding!!
-
     private val viewModel: SensorViewModel by viewModels { SensorViewModel.Factory(zContainer.sensorRepository) }
     private val sensorAdapter = SensorAdapter(this)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSensorBinding.inflate(layoutInflater, container, false)
-        viewModel.greenhouseId.postValue(requireArguments().getLong(Utils.KEY_GREENHOUSE_ID))
+        viewModel.postGreenhouseId(requireArguments().getLong(Utils.KEY_GREENHOUSE_ID))
 
         viewModel.greenhouseId.observe(requireActivity()) {
             viewModel.loadSensors()
-            // SENSOR
-            sensorAdapter.initAdapter(binding.sensorsRecyclerView, binding.btnRetry, viewModel.sensors, lifecycleScope)
-            sensorAdapter.addLoadStateListener(binding.btnRetry, binding.progressBar) {
-                showToast(it.error.toString())
-            }
+            setupSensorList()
         }
 
 
         return binding.root
+    }
+    private fun setupSensorList(){
+        sensorAdapter.initAdapter(binding.sensorsRecyclerView, binding.btnRetry, viewModel.sensors, lifecycleScope)
+        sensorAdapter.addLoadStateListener(binding.btnRetry, binding.progressBar) {
+            showToast(it.error.toString())
+        }
     }
 
     override fun insertNestedFragment(model: SensorModel.SensorItem) {

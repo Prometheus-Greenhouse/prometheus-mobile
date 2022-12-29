@@ -40,6 +40,9 @@ class SensorViewModel(private val sensorRepository: SensorRepository) : ZViewMod
             }
     }
 
+    fun postGreenhouseId(greenhouseId:Long){
+        this.greenhouseId.postValue(greenhouseId)
+    }
 
     class Factory(val sensorRepository: SensorRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

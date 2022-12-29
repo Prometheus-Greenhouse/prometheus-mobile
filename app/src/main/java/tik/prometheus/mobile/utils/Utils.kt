@@ -1,10 +1,14 @@
 package tik.prometheus.mobile.utils
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
+import android.text.InputType
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
+import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.core.content.res.use
 import com.google.gson.Gson
@@ -65,3 +69,4 @@ fun underline(str: String): SpannableString {
     content.setSpan(UnderlineSpan(), 0, content.length, 0)
     return content
 }
+

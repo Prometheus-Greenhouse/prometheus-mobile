@@ -1,14 +1,11 @@
 package tik.prometheus.mobile.ui.screen.actuator.detail
 
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat
@@ -276,19 +273,19 @@ class ActuatorDetailFragment : ZFragment(), MqttSensorViewHolder {
         dialog.show()
     }
 
-    fun editText(defaultValue: String?, title: String, inputType: Int = InputType.TYPE_CLASS_TEXT, onOk: (dialog: DialogInterface, input: EditText) -> Unit) {
-        val input = EditText(requireContext())
-        input.inputType = inputType
-        input.setText(defaultValue)
-        val alert = AlertDialog.Builder(requireContext())
-            .setTitle(title)
-            .setView(input)
-            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog: DialogInterface, which: Int ->
-                onOk.invoke(dialog, input)
-            })
-            .create()
-        alert.show()
-    }
+//    fun editText(defaultValue: String?, title: String, inputType: Int = InputType.TYPE_CLASS_TEXT, onOk: (dialog: DialogInterface, input: EditText) -> Unit) {
+//        val input = EditText(requireContext())
+//        input.inputType = inputType
+//        input.setText(defaultValue)
+//        val alert = AlertDialog.Builder(requireContext())
+//            .setTitle(title)
+//            .setView(input)
+//            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog: DialogInterface, which: Int ->
+//                onOk.invoke(dialog, input)
+//            })
+//            .create()
+//        alert.show()
+//    }
 
     override fun updateMqttValue(topic: String?, value: String?) {
         when (topic) {

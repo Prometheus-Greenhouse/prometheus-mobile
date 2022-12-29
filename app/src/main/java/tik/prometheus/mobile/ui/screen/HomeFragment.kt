@@ -1,7 +1,9 @@
 package tik.prometheus.mobile.ui.screen
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat
 import ir.mirrajabi.searchdialog.core.BaseSearchDialogCompat
 import ir.mirrajabi.searchdialog.core.SearchResultListener
@@ -25,6 +24,11 @@ import tik.prometheus.mobile.ui.adapters.SensorAdapter
 import tik.prometheus.mobile.ui.screen.sensor.SensorModel
 import tik.prometheus.mobile.utils.Utils
 import tik.prometheus.mobile.utils.themeColor
+import tik.prometheus.mobile.utils.underline
+import tik.prometheus.rest.constants.NullableSensorTypeModel
+import tik.prometheus.rest.constants.SensorType
+import java.time.LocalDate
+import java.util.*
 
 class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
     val TAG = HomeFragment::class.toString()
@@ -38,13 +42,67 @@ class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
 
-        viewModel.loadSensors()
-        initAdapter()
-
         viewModel.greenhouseId.observe(requireActivity()) {
             viewModel.loadSensors()
-            initAdapter()
         }
+
+        setupChart()
+        setupSearcher()
+        setupSensorList()
+
+
+        return binding.root
+    }
+
+    private fun setupChart() {
+        // CHAR
+        viewModel.sensorLineChartData.observe(requireActivity()) {
+            val data = LineData(it)
+            binding.lineChart.data = data
+            binding.lineChart.invalidate()
+            val color: Int = requireContext().themeColor(R.attr.colorOnBackground)
+            binding.lineChart.axisLeft.textColor = color
+            binding.lineChart.axisRight.textColor = color
+            binding.lineChart.legend.textColor = color
+            binding.lineChart.lineData.setValueTextColor(color)
+            binding.lineChart.description.textColor = color
+            binding.lineChart.description.text = ""
+        }
+        // Date range
+
+        binding.txtFromValue.text = underline(viewModel.fromDate.value.toString())
+        binding.txtFromValue.inputType = InputType.TYPE_NULL
+        viewModel.fromDate.observe(requireActivity()) {
+            binding.txtFromValue.text = underline(it.toString())
+        }
+        binding.txtFromValue.setOnClickListener {
+            val pickedValue = viewModel.fromDate.value
+            val picker = DatePickerDialog(
+                requireContext(), { context, year, month, dayOfMonth ->
+                    viewModel.postFromDate(LocalDate.of(year, month + 1, dayOfMonth))
+                },
+                pickedValue!!.year, pickedValue.monthValue - 1, pickedValue.dayOfMonth
+            )
+            picker.show()
+        }
+
+        binding.txtToValue.text = underline(viewModel.toDate.value.toString())
+        binding.txtToValue.inputType = InputType.TYPE_NULL
+        viewModel.toDate.observe(requireActivity()) {
+            binding.txtToValue.text = underline(it.toString())
+        }
+        binding.txtToValue.setOnClickListener {
+            val pickedValue = viewModel.toDate.value
+            val picker = DatePickerDialog(
+                requireContext(), { context, year, month, dayOfMonth ->
+                    viewModel.postToDate(LocalDate.of(year, month + 1, dayOfMonth))
+                },
+                pickedValue!!.year, pickedValue.monthValue - 1, pickedValue.dayOfMonth
+            )
+            picker.show()
+        }
+
+        // Select sensor
         viewModel.selectSensors.observe(requireActivity()) {
             binding.txtSelectSensorCount.text = it?.size.toString()
             viewModel.loadSensorLineChartData(
@@ -56,9 +114,6 @@ class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
                 )
             )
         }
-        binding.txtFromValue.text = viewModel.fromDate.value.toString()
-        binding.txtToValue.text = viewModel.toDate.value.toString()
-
         binding.clSelectedSensorCount.setOnClickListener(View.OnClickListener {
             val dialog = SimpleSearchDialogCompat(context, "Search", "Find sensor type", null, viewModel.selectSensors.value?.values?.toCollection(ArrayList()),
                 SearchResultListener { baseSearchDialogCompat: BaseSearchDialogCompat<Searchable>, searchable: Searchable, i: Int ->
@@ -77,29 +132,28 @@ class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
             dialog.show()
         })
 
-        // CHAR
-        initChart()
-        viewModel.sensorLineChartData.observe(requireActivity()) {
-            val data = LineData(it)
-            binding.lineChart.data = data
-            binding.lineChart.invalidate()
-            val color: Int = requireContext().themeColor(R.attr.colorOnBackground)
-            binding.lineChart.axisLeft.textColor = color
-            binding.lineChart.axisRight.textColor = color
-            binding.lineChart.legend.textColor = color
-            binding.lineChart.lineData.setValueTextColor(color)
-            binding.lineChart.description.textColor = color
-            binding.lineChart.description.text = ""
-        }
-
-
-        return binding.root
     }
 
-    private fun initAdapter() {
-        sensorAdapter.initAdapter(binding.sensorLayout.sensorsRecyclerView, binding.sensorLayout.btnRetry, viewModel.sensors, lifecycleScope)
-        sensorAdapter.addLoadStateListener(binding.sensorLayout.btnRetry, binding.sensorLayout.progressBar) { showToast(it.error.toString()) }
-        sensorAdapter.onLongClickListenerFactory = OnLongClickSensorItemListenerFactory()
+    fun setupSearcher() {
+        viewModel.selectedSensorType.observe(requireActivity()) {
+            var sensorText = it.sensorType?.name ?: resources.getText(R.string.sensor_type).toString()
+            println(sensorText)
+            binding.sensorLayout.txtSearchSensorType.text = underline(sensorText)
+            viewModel.loadSensors()
+        }
+        binding.sensorLayout.txtSearchSensorType.setOnClickListener {
+            editType()
+        }
+    }
+
+    private fun setupSensorList() {
+        viewModel.sensors.observe(requireActivity()) {
+            it?.let {
+                sensorAdapter.initAdapter(binding.sensorLayout.sensorsRecyclerView, binding.sensorLayout.btnRetry, it, lifecycleScope)
+                sensorAdapter.addLoadStateListener(binding.sensorLayout.btnRetry, binding.sensorLayout.progressBar) { it -> showToast(it.error.toString()) }
+                sensorAdapter.onLongClickListenerFactory = OnLongClickSensorItemListenerFactory()
+            }
+        }
     }
 
     inner class OnLongClickSensorItemListenerFactory : SensorAdapter.OnLongClickListenerFactory {
@@ -121,37 +175,6 @@ class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
     }
 
 
-    private fun initChart() {
-        val mpLinechart = binding.lineChart
-        val dataSets: MutableList<ILineDataSet> = ArrayList()
-        dataSets.add(
-            LineDataSet(dataValues(), "Data set 1")
-        )
-        val data = LineData(dataSets)
-        mpLinechart.data = data
-        mpLinechart.invalidate()
-
-        val color: Int = requireContext().themeColor(R.attr.colorOnBackground)
-        mpLinechart.axisLeft.textColor = color
-        mpLinechart.axisRight.textColor = color
-        mpLinechart.legend.textColor = color
-        mpLinechart.lineData.setValueTextColor(color)
-        mpLinechart.description.textColor = color
-        mpLinechart.description.text = ""
-
-    }
-
-    fun dataValues(): List<Entry> {
-        val dataVals: MutableList<Entry> = ArrayList()
-        dataVals.add(Entry(0f, 20f))
-        dataVals.add(Entry(1f, 10f))
-        dataVals.add(Entry(3f, 30f))
-        dataVals.add(Entry(9f, 20f))
-        dataVals.add(Entry(7f, 10f))
-        return dataVals
-    }
-
-
     override fun insertNestedFragment(model: SensorModel.SensorItem) {
         val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_container)
         val pair = Pair(Utils.KEY_SENSOR_ID, model.sensor.id)
@@ -159,38 +182,26 @@ class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
         navController.navigate(R.id.nav_sensor_detail, args)
     }
 
+    private fun editType() {
+        val dialog = SimpleSearchDialogCompat(context, "Search", "Find sensor type", null, SensorType.getNullableModels(),
+            SearchResultListener { baseSearchDialogCompat: BaseSearchDialogCompat<Searchable>, searchable: Searchable, i: Int ->
+                when (searchable) {
+                    is NullableSensorTypeModel -> {
+                        viewModel.postSelectedSensorType(searchable)
+                        baseSearchDialogCompat.dismiss()
+                    }
+
+                    else -> {
+                    }
+                }
+            }
+        )
+        dialog.show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-//
-//
-//    private fun initSensorDashboard() {
-//        val sensorRecycleView = binding!!.sensorsRecyclerView
-//        sensorRecycleView.layoutManager = LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
-//        val sensorAdapter = SensorAdapter {}
-//        sensorRecycleView.adapter = sensorAdapter
-//        val restServiceApi = RestServiceHelper.getInstance().create(RestServiceApi::class.java)
-//        GlobalScope.launch {
-//            val queryMap = Pageable(0, 10, ArrayList()).toMap()
-//            val res = restServiceApi.getSensors(queryMap)
-//            if (res.isSuccessful) {
-//                val sensorPage = res.body();
-//                for (sensor: Sensor in sensorPage?.content!!) {
-//                    val card = CardView(requireContext())
-//                    val layout = LinearLayout.LayoutParams(200, 200)
-//                    layout.setMargins(5, 5, 5, 5)
-//                    card.layoutParams = layout
-//                    val color: Int = requireContext().themeColor(R.attr.colorError)
-//                    card.setCardBackgroundColor(color)
-//                    val txt = TextView(requireContext())
-//                    txt.text = sensor.topic
-//                    card.addView(txt)
-//                    viewModel?.sensorMap?.value?.put(sensor.id, sensor)
-//                    sensorRecycleView.addView(card)
-//                }
-//            }
-//        }
-//    }
 }

@@ -21,7 +21,7 @@ class GreenhouseAdapter(var parent: NestableFragment<GreenhouseModel.GreenhouseI
                     val viewHolder = holder as GreenhouseViewHolder
                     val greenhouse = greenhouseModel.greenhouse
                     viewHolder.ghItemBinding.txtGreenhouseId.text = greenhouse.id.toString()
-                    viewHolder.ghItemBinding.txtGreenhouseType.text = greenhouse.type
+                    viewHolder.ghItemBinding.txtGreenhouseType.text = greenhouse.type?.value
                     viewHolder.ghItemBinding.txtGreenhouseLabel.text = greenhouse.label
 
                     holder.itemView.setOnClickListener(View.OnClickListener {

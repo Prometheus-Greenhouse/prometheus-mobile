@@ -5,11 +5,11 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import tik.prometheus.mobile.models.Sensor
+import tik.prometheus.rest.constants.SensorType
 
-class SensorRepository(private val sensorDataSource: SensorDataSource, val restServiceApi: RestServiceApi) {
+class SensorRepository(val restServiceApi: RestServiceApi) {
 
-    fun getSensorListStream(greenhouseId: Long? = null): Flow<PagingData<Sensor>> {
-        sensorDataSource.greenhouseId = greenhouseId
-        return Pager(PagingConfig(20)) { sensorDataSource }.flow
+    fun getSensorListStream(greenhouseId: Long? = null, sensorType: SensorType? = null): Flow<PagingData<Sensor>> {
+        return Pager(PagingConfig(20)) { SensorDataSource(restServiceApi, greenhouseId, sensorType) }.flow
     }
 }

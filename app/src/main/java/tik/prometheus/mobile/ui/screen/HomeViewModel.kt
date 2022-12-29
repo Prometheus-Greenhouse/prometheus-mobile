@@ -16,21 +16,40 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import tik.prometheus.mobile.repository.SensorRepository
 import tik.prometheus.mobile.ui.screen.sensor.SensorModel
+import tik.prometheus.rest.constants.NullableSensorTypeModel
+import tik.prometheus.rest.constants.SensorTypeModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.streams.toList
 
 
 class HomeViewModel(private val sensorRepository: SensorRepository) : ViewModel() {
+    val TAG = HomeViewModel::class.toString()
+
     val greenhouseId: MutableLiveData<Long> = MutableLiveData(null)
-    lateinit var sensors: Flow<PagingData<SensorModel>>
+    val sensors: MutableLiveData<Flow<PagingData<SensorModel>>> = MutableLiveData(null)
     var selectSensors: MutableLiveData<MutableMap<Long, SensorModel.SensorItem>> = MutableLiveData(mutableMapOf())
     var sensorLineChartData: MutableLiveData<MutableList<ILineDataSet>> = MutableLiveData(ArrayList())
     var fromDate: MutableLiveData<LocalDate> = MutableLiveData(LocalDate.now().plusDays(-7))
     var toDate: MutableLiveData<LocalDate> = MutableLiveData(LocalDate.now().plusDays(1))
+    var selectedSensorType: MutableLiveData<NullableSensorTypeModel> = MutableLiveData()
+    fun postFromDate(from: LocalDate) {
+        fromDate.postValue(from)
+        loadSensorLineChartData(arrayListOf())
+    }
+
+    fun postToDate(to: LocalDate) {
+        toDate.postValue(to)
+        loadSensorLineChartData(arrayListOf())
+    }
+
+    fun postSelectedSensorType(sensorType: NullableSensorTypeModel) {
+        selectedSensorType.postValue(sensorType)
+    }
 
     fun loadSensors() {
-        sensors = sensorRepository.getSensorListStream(greenhouseId = greenhouseId.value)
+        println("loadSensors %s %s".format(greenhouseId.value, selectedSensorType.value?.sensorType))
+        sensors.postValue(sensorRepository.getSensorListStream(greenhouseId = greenhouseId.value, sensorType = selectedSensorType.value?.sensorType)
             .map { data ->
                 data.map {
                     SensorModel.SensorItem(it)
@@ -46,7 +65,7 @@ class HomeViewModel(private val sensorRepository: SensorRepository) : ViewModel(
                         null
                     }
                 }
-            }
+            })
     }
 
     fun loadSensorLineChartData(colorItr: ArrayList<Int>) {
@@ -60,7 +79,6 @@ class HomeViewModel(private val sensorRepository: SensorRepository) : ViewModel(
                     LocalDateTime.of(from.year, from.month, from.dayOfMonth, 0, 0, 0),
                     LocalDateTime.of(to.year, to.month, to.dayOfMonth, 0, 0, 0)
                 )
-                println(res.isSuccessful)
                 if (res.isSuccessful) {
                     var i = -1f
                     val dataSet = LineDataSet(
@@ -68,6 +86,7 @@ class HomeViewModel(private val sensorRepository: SensorRepository) : ViewModel(
                         sensorId.toString()
                     )
 //                    dataSet.color = colorItr[i.toInt() % colorItr.size]
+                    println(dataSet)
                     data.add(dataSet)
                 }
             }

@@ -36,4 +36,6 @@
     <string name="sensor_value"><u>sensor value</u></string>
     <string name="schedule">Schedule</string>
     <string name="zero">0</string>
+
+    <string name="sensor_type">Sensor type</string>
 </resources>

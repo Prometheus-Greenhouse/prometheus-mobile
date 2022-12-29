@@ -12,7 +12,14 @@ enum class SensorType(val value: String) {
     companion object {
         fun getModels(): ArrayList<SensorTypeModel> {
             val types = SensorType.values()
-            return types.map { SensorTypeModel(it) }.toCollection(ArrayList())
+            val models = types.map { SensorTypeModel(it) }.toCollection(ArrayList())
+            return models
+        }
+        fun getNullableModels(): ArrayList<NullableSensorTypeModel> {
+            val types = SensorType.values()
+            val models = types.map { NullableSensorTypeModel(it) }.toCollection(ArrayList())
+            models.add(NullableSensorTypeModel(null))
+            return models
         }
     }
 }
@@ -20,5 +27,10 @@ enum class SensorType(val value: String) {
 data class SensorTypeModel(val sensorType: SensorType) : Searchable {
     override fun getTitle(): String {
         return sensorType.value
+    }
+}
+data class NullableSensorTypeModel(val sensorType: SensorType?) : Searchable {
+    override fun getTitle(): String {
+        return sensorType?.value ?: "null"
     }
 }
