@@ -13,9 +13,9 @@ import java.util.concurrent.TimeUnit
 
 object Configs {
     var TAG = Configs::class.java.toString()
-    private val CONFIG_URI: String = "http://192.168.1.3:8000"
+    private val CONFIG_URI: String = "http://192.168.1.8:8000"
     private val CONFIG_NAME: String = "prometheus-mobile"
-    private val CONFIG_PROFILE: String = "dev"
+    private val CONFIG_PROFILE: String = "uat"
     var configs: ConfigProperties? = null
     private var loaded: Boolean = false
 

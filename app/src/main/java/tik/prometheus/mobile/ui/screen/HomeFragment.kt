@@ -42,10 +42,6 @@ class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
 
-        viewModel.greenhouseId.observe(requireActivity()) {
-            viewModel.loadSensors()
-        }
-
         setupChart()
         setupSearcher()
         setupSensorList()
@@ -134,15 +130,24 @@ class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
 
     }
 
-    fun setupSearcher() {
+    private fun setupSearcher() {
+        viewModel.loadGreenhouse()
+
         viewModel.selectedSensorType.observe(requireActivity()) {
             var sensorText = it.sensorType?.name ?: resources.getText(R.string.sensor_type).toString()
-            println(sensorText)
             binding.sensorLayout.txtSearchSensorType.text = underline(sensorText)
             viewModel.loadSensors()
         }
         binding.sensorLayout.txtSearchSensorType.setOnClickListener {
             editType()
+        }
+        viewModel.selectedGreenhouse.observe(requireActivity()) {
+            var greenhouseLabel: String = it?.label ?: resources.getText(R.string.greenhouse).toString()
+            binding.sensorLayout.txtSearchGreenhouse.text = underline(greenhouseLabel)
+            viewModel.loadSensors()
+        }
+        binding.sensorLayout.txtSearchGreenhouse.setOnClickListener {
+            selectGreenhouse()
         }
     }
 
@@ -188,12 +193,28 @@ class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
                 when (searchable) {
                     is NullableSensorTypeModel -> {
                         viewModel.postSelectedSensorType(searchable)
-                        baseSearchDialogCompat.dismiss()
                     }
 
                     else -> {
                     }
                 }
+                baseSearchDialogCompat.dismiss()
+            }
+        )
+        dialog.show()
+    }
+    private fun selectGreenhouse(){
+        val dialog = SimpleSearchDialogCompat(context, "Search", "Find greenhouse", null, viewModel.greenhouses,
+            SearchResultListener { baseSearchDialogCompat: BaseSearchDialogCompat<Searchable>, searchable: Searchable, i: Int ->
+                when (searchable) {
+                    is NullableSensorTypeModel -> {
+                        viewModel.postSelectedSensorType(searchable)
+                    }
+
+                    else -> {
+                    }
+                }
+                baseSearchDialogCompat.dismiss()
             }
         )
         dialog.show()

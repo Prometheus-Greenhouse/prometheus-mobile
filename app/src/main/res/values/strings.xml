@@ -38,4 +38,5 @@
     <string name="zero">0</string>
 
     <string name="sensor_type">Sensor type</string>
+    <string name="greenhouse">Greenhouse</string>
 </resources>
