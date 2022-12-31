@@ -6,13 +6,9 @@ class ZContainer {
 
     val restServiceApi = RestServiceHelper.createApi()
 
-    val greenhouseDataSource = GreenhouseDataSource(restServiceApi)
-
-    val actuatorDataSource = ActuatorDataSource(restServiceApi)
-
-    val greenhouseRepository = GreenhouseRepository(greenhouseDataSource, restServiceApi)
+    val greenhouseRepository = GreenhouseRepository(restServiceApi)
 
     val sensorRepository = SensorRepository(restServiceApi)
 
-    val actuatorRepository = ActuatorRepository(actuatorDataSource, restServiceApi)
+    val actuatorRepository = ActuatorRepository(restServiceApi)
 }

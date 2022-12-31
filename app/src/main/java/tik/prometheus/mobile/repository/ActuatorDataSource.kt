@@ -8,8 +8,8 @@ import tik.prometheus.mobile.utils.toExcept
 
 class ActuatorDataSource(
     private val restServiceApi: RestServiceApi,
-) : PagingSource<Int, Actuator>() {
     var greenhouseId: Long? = null
+) : PagingSource<Int, Actuator>() {
 
     override fun getRefreshKey(state: PagingState<Int, Actuator>): Int {
         return 0

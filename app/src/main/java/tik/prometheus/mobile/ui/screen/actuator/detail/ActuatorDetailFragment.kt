@@ -38,26 +38,23 @@ class ActuatorDetailFragment : ZFragment(), MqttSensorViewHolder {
         _binding = FragmentActuatorDetailBinding.inflate(inflater, container, false)
 
         initActuatorInfo()
-        Log.d(TAG, "onCreateView: " + viewModel.actuatorId.value)
+
         setUpRunOn()
 
         setUpTaskOnSensor()
 
         setUpIsRunningButton()
 
-
         binding.btnSave.setOnClickListener(View.OnClickListener { viewModel.saveActuator() })
         return binding.root
     }
 
-    fun initActuatorInfo() {
+    private fun initActuatorInfo() {
         val actuatorId = requireArguments().getLong(Utils.KEY_ACTUATOR_ID)
-        Log.d(TAG, "before initActuatorInfo: " + actuatorId)
-        viewModel.actuatorId.value = actuatorId
-        Log.d(TAG, "initActuatorInfo: " + viewModel.actuatorId.value + " : " + actuatorId)
+        viewModel.postActuatorId(actuatorId)
 
         viewModel.actuatorId.observe(requireActivity()) {
-            viewModel.fetchActuatorDetail()
+            viewModel.fetchAll()
         }
 
         viewModel.actuator.observe(requireActivity(), Observer {
@@ -67,7 +64,7 @@ class ActuatorDetailFragment : ZFragment(), MqttSensorViewHolder {
             binding.txtLabel.text = it.label
             binding.txtNorth.text = it.north.toString()
             binding.txtWest.text = it.west.toString()
-            Log.d(TAG, "initActuatorInfo: " + it.topic)
+            Log.d(TAG, "initActuatorInfoObserve: " + it)
             actuatorStateClient = MqttHelper.createSensorListener(binding.root.context, it.topic, this)
         })
         binding.llType.setOnClickListener(DoubleTapListener(requireContext()) {
@@ -127,32 +124,24 @@ class ActuatorDetailFragment : ZFragment(), MqttSensorViewHolder {
     }
 
     fun setUpRunOn() {
-        viewModel.fetchActuatorTask()
 
         binding.txtRunOn.setOnClickListener(View.OnClickListener {
             val dialog = SimpleSearchDialogCompat(context, "Search", "Run on", null, RunOn.values().map { RunOnModel.RunOnItem(it) }.toCollection(ArrayList()),
-                SearchResultListener { baseSearchDialogCompat: BaseSearchDialogCompat<Searchable>, searchable: Searchable, i: Int ->
-                    when (searchable) {
-                        is RunOnModel.RunOnItem -> {
-                            binding.txtRunOn.text = underline(searchable.title)
-                            if (searchable.value == RunOn.SENSOR_VALUE) {
-                                binding.lnSensorTask.visibility = View.VISIBLE
-//                                viewModel.fetchActuatorTask()
-                            } else if (searchable.value == RunOn.DECISION_TREE) {
-                                binding.lnSensorTask.visibility = View.VISIBLE
-//                                viewModel.actuatorTask.value = ActuatorTask(
-//                                    taskType = ActuatorTaskType.DECISION,
-//                                    startValue = 0f,
-//                                    limitValue = 0f
-//                                )
-//                                println("txtRunOn" + viewModel.actuatorTask.value)
-                            } else if (searchable.value == RunOn.NaN) {
-                                binding.lnSensorTask.visibility = View.GONE
-                                viewModel.actuatorTask.value = null
-                            }
+                SearchResultListener { baseSearchDialogCompat: BaseSearchDialogCompat<Searchable>, searchable: RunOnModel.RunOnItem, i: Int ->
+                    when (searchable.value) {
+                        RunOn.DECISION_TREE -> {
+                            viewModel.postActuatorTask(ActuatorTask(taskType = ActuatorTaskType.DECISION, startValue = 0F, limitValue = 0F))
+                            binding.lnSensorTask.visibility = View.VISIBLE
                         }
 
-                        else -> {
+                        RunOn.SENSOR_VALUE -> {
+                            viewModel.postActuatorTask(ActuatorTask(taskType = ActuatorTaskType.RANGE, startValue = 0F, limitValue = 0F))
+                            binding.lnSensorTask.visibility = View.VISIBLE
+                        }
+
+                        RunOn.NaN -> {
+                            viewModel.postActuatorTask(null)
+                            binding.lnSensorTask.visibility = View.GONE
                         }
                     }
                     baseSearchDialogCompat.dismiss()
@@ -160,14 +149,37 @@ class ActuatorDetailFragment : ZFragment(), MqttSensorViewHolder {
             )
             dialog.show()
         })
+//        viewModel.runOn.observe(requireActivity()) {
+//            Log.d(TAG, "setUpRunOnObserve: $it")
+//            binding.txtRunOn.text = underline(it.name)
+//            when (it) {
+//                RunOn.SENSOR_VALUE -> {
+//                    binding.lnSensorTask.visibility = View.VISIBLE
+//                }
+//
+//                RunOn.DECISION_TREE -> {
+//                    binding.lnSensorTask.visibility = View.VISIBLE
+//                }
+//
+//                RunOn.NaN -> {
+//                    binding.lnSensorTask.visibility = View.GONE
+//                }
+//
+//                else -> {
+//
+//                }
+//            }
+//            viewModel.postActuatorTask(null)
+//        }
 
-        viewModel.actuatorTask.observe(requireActivity()) {
-            loadActuatorTask()
-        }
+
     }
 
     fun setUpTaskOnSensor() {
-        viewModel.fetchSensors()
+        viewModel.actuatorTask.observe(requireActivity()) {
+            Log.d(TAG, "setUpTaskOnSensorObserve: ")
+            loadActuatorTask()
+        }
 
         binding.txtSensorId.setOnClickListener(DoubleTapListener(requireContext()) {
             val dialog = SimpleSearchDialogCompat(context, "Search", "Find sensor", null,
@@ -199,32 +211,31 @@ class ActuatorDetailFragment : ZFragment(), MqttSensorViewHolder {
         })
     }
 
-    fun setUpIsRunningButton() {
-        viewModel.isRunning.observe(requireActivity()) {
-            println("is running: $it")
-            if (it) {
-                binding.ivActuatorBg.setImageResource(R.drawable.pink_neon);
-                binding.txtActuatorState.text = resources.getString(R.string.off)
-            } else {
-                binding.ivActuatorBg.setImageResource(R.drawable.blue_neon);
-                binding.txtActuatorState.text = resources.getString(R.string.on)
-            }
-        }
-
-        binding.ivActuatorBg.setOnClickListener {
-            viewModel.toggleRunning()
-        };
-    }
-
     private fun loadActuatorTask() {
-        binding.txtSensorId.text = underline("NaN")
-        binding.txtSensorLabel.text = "NaN"
-        binding.txtSensorType.text = "NaN"
-        binding.txtSensorUnit.text = "NaN"
-        binding.txtSensorTargetValueFrom.text = "0"
-        binding.txtSensorTargetValueTo.text = "0"
+        binding.txtRunOn.text = underline(RunOn.NaN.name)
+        binding.lnSensorTask.visibility = View.GONE
+//        binding.txtSensorId.text = underline("NaN")
+//        binding.txtSensorLabel.text = ""
+//        binding.txtSensorType.text = "NaN"
+//        binding.txtSensorUnit.text = "NaN"
+//        binding.txtSensorTargetValueFrom.text = "0"
+//        binding.txtSensorTargetValueTo.text = "0"
+
         viewModel.actuatorTask.value?.let {
-            Log.d(TAG, "loadActuatorTask: " + it.sensorTopic)
+            Log.d(TAG, "loadActuatorTask: $it")
+            when (it.taskType) {
+                ActuatorTaskType.DECISION -> {
+                    binding.txtRunOn.text = underline(RunOn.DECISION_TREE.name)
+                    binding.lnSensorTask.visibility = View.VISIBLE
+                }
+
+                ActuatorTaskType.RANGE -> {
+                    binding.txtRunOn.text = underline(RunOn.SENSOR_VALUE.name)
+                    binding.lnSensorTask.visibility = View.VISIBLE
+                }
+
+                else -> {}
+            }
             mqttAndroidClient = MqttHelper.createSensorListener(binding.root.context, it.sensorTopic, this)
             binding.txtSensorId.text = underline(it.sensorId.toString())
             binding.txtSensorLabel.text = it.sensorLabel
@@ -253,6 +264,26 @@ class ActuatorDetailFragment : ZFragment(), MqttSensorViewHolder {
             })
 
         }
+    }
+
+    fun setUpIsRunningButton() {
+        viewModel.isRunning.observe(requireActivity()) {
+            println("is running: $it")
+            try {
+                if (it) {
+                    binding.ivActuatorBg.setImageResource(R.drawable.pink_neon);
+                    binding.txtActuatorState.text = resources.getString(R.string.off)
+                } else {
+                    binding.ivActuatorBg.setImageResource(R.drawable.blue_neon);
+                    binding.txtActuatorState.text = resources.getString(R.string.on)
+                }
+            } catch (e: Exception) {
+            }
+        }
+
+        binding.ivActuatorBg.setOnClickListener {
+            viewModel.toggleRunning()
+        };
     }
 
     private fun editType() {

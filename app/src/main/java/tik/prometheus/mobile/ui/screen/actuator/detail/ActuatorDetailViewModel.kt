@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import tik.prometheus.mobile.ZViewModel
 import tik.prometheus.mobile.models.*
 import tik.prometheus.mobile.repository.ActuatorRepository
+import tik.prometheus.mobile.utils.ActuatorTaskType
 import tik.prometheus.mobile.utils.RunOn
 import tik.prometheus.mobile.utils.ZLoadState
 import tik.prometheus.mobile.utils.toExcept
@@ -20,9 +21,64 @@ class ActuatorDetailViewModel(private val actuatorRepository: ActuatorRepository
     var loadState: MutableLiveData<ZLoadState> = MutableLiveData(ZLoadState.NOT_LOADING)
     var actuatorId: MutableLiveData<Long> = MutableLiveData()
     var actuator: MutableLiveData<Actuator> = MutableLiveData()
+//    var runOn: MutableLiveData<RunOn> = MutableLiveData()
     var actuatorTask: MutableLiveData<ActuatorTask?> = MutableLiveData()
     var isRunning: MutableLiveData<Boolean> = MutableLiveData(false)
     var sensors: MutableLiveData<List<Sensor>> = MutableLiveData(arrayListOf())
+
+//    fun postRunOn(runOn: RunOn) {
+//        this.runOn.postValue(runOn)
+//    }
+
+    fun postActuator(actuator: Actuator) {
+        this.actuator.postValue(actuator)
+    }
+
+    fun postActuatorId(id: Long) {
+        actuatorId.postValue(id)
+    }
+
+    fun postActuatorTask(actuatorTask: ActuatorTask?) {
+        this.actuatorTask.postValue(actuatorTask)
+    }
+
+    fun postRunning(isRunning: Boolean) {
+        this.isRunning.postValue(isRunning)
+    }
+
+    fun fetchAll() {
+        loadState.postValue(ZLoadState.LOADING)
+        viewModelScope.launch(Dispatchers.IO) {
+            val res = actuatorRepository.restServiceApi.getActuator(actuatorId.value!!)
+            if (res.isSuccessful) {
+                val actuatorRes = res.body()!!
+                actuator.postValue(actuatorRes)
+                fetchSensors()
+                isRunning.postValue(actuatorRes.state.running)
+                loadState.postValue(ZLoadState.NOT_LOADING)
+            } else {
+                loadState.postValue(ZLoadState.Error(Exception(res.toExcept().message)))
+            }
+
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            val resTask = actuatorRepository.restServiceApi.getActuatorTask(actuatorId.value!!)
+            when (resTask.code()) {
+                200 -> {
+                    println("68 ------------>" + resTask.body())
+                    actuatorTask.postValue(resTask.body())
+                }
+
+                404 -> {
+                    actuatorTask.postValue(null)
+                }
+
+                else -> {
+                    loadState.postValue(ZLoadState.Error(Exception(resTask.toExcept().message)))
+                }
+            }
+        }
+    }
 
     fun fetchSensors(): List<Sensor> {
         actuator.value?.greenhouse.let {
@@ -42,7 +98,6 @@ class ActuatorDetailViewModel(private val actuatorRepository: ActuatorRepository
         loadState.postValue(ZLoadState.LOADING)
 
         viewModelScope.launch(Dispatchers.IO) {
-            println("45: fetchActuatorDetail" + actuatorId.value)
             val res = actuatorRepository.restServiceApi.getActuator(actuatorId.value!!)
             if (res.isSuccessful) {
                 fetchActuatorTask()
@@ -68,12 +123,7 @@ class ActuatorDetailViewModel(private val actuatorRepository: ActuatorRepository
         }
     }
 
-    fun postRunning(isRunning: Boolean) {
-        this.isRunning.postValue(isRunning)
-    }
-    fun postActuatorTask(actuatorTask: ActuatorTask){
-        this.actuatorTask.postValue(actuatorTask)
-    }
+
     fun toggleRunning() {
         viewModelScope.launch(Dispatchers.IO) {
             val nextIsRunning = isRunning.value!!.not()

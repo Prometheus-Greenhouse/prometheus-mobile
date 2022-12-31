@@ -33,7 +33,7 @@
                   android:textSize="20sp"
                   android:layout_height="wrap_content"
                   android:iconifiedByDefault="false"
-                  android:text="Greenhouse type"
+                  android:text="Type"
         />
         <ImageView
                 android:src="@drawable/baseline_search_24"

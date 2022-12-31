@@ -33,7 +33,7 @@ class HomeViewModel(private val sensorRepository: SensorRepository) : ViewModel(
     var fromDate: MutableLiveData<LocalDate> = MutableLiveData(LocalDate.now().plusDays(-7))
     var toDate: MutableLiveData<LocalDate> = MutableLiveData(LocalDate.now().plusDays(1))
     var selectedGreenhouse: MutableLiveData<Greenhouse> = MutableLiveData(null)
-    var selectedSensorType: MutableLiveData<NullableSensorTypeModel> = MutableLiveData()
+    var selectedSensorType: MutableLiveData<NullableSensorTypeModel> = MutableLiveData(null)
     var greenhouses: ArrayList<Greenhouse> = ArrayList()
     fun postFromDate(from: LocalDate) {
         fromDate.postValue(from)
@@ -47,6 +47,9 @@ class HomeViewModel(private val sensorRepository: SensorRepository) : ViewModel(
 
     fun postSelectedSensorType(sensorType: NullableSensorTypeModel) {
         selectedSensorType.postValue(sensorType)
+    }
+    fun postSelectedGreenhouse(greenhouse: Greenhouse) {
+        selectedGreenhouse.postValue(greenhouse)
     }
 
     fun loadSensors() {
@@ -107,6 +110,8 @@ class HomeViewModel(private val sensorRepository: SensorRepository) : ViewModel(
             sensorLineChartData.postValue(data)
         }
     }
+
+
 
     class Factory(val sensorRepository: SensorRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

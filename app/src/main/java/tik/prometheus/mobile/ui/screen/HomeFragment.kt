@@ -27,6 +27,7 @@ import tik.prometheus.mobile.utils.themeColor
 import tik.prometheus.mobile.utils.underline
 import tik.prometheus.rest.constants.NullableSensorTypeModel
 import tik.prometheus.rest.constants.SensorType
+import tik.prometheus.rest.models.Greenhouse
 import java.time.LocalDate
 import java.util.*
 
@@ -134,7 +135,7 @@ class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
         viewModel.loadGreenhouse()
 
         viewModel.selectedSensorType.observe(requireActivity()) {
-            var sensorText = it.sensorType?.name ?: resources.getText(R.string.sensor_type).toString()
+            var sensorText = it?.sensorType?.name ?: resources.getText(R.string.sensor_type).toString()
             binding.sensorLayout.txtSearchSensorType.text = underline(sensorText)
             viewModel.loadSensors()
         }
@@ -207,8 +208,8 @@ class HomeFragment : ZFragment(), NestableFragment<SensorModel.SensorItem> {
         val dialog = SimpleSearchDialogCompat(context, "Search", "Find greenhouse", null, viewModel.greenhouses,
             SearchResultListener { baseSearchDialogCompat: BaseSearchDialogCompat<Searchable>, searchable: Searchable, i: Int ->
                 when (searchable) {
-                    is NullableSensorTypeModel -> {
-                        viewModel.postSelectedSensorType(searchable)
+                    is Greenhouse -> {
+                        viewModel.postSelectedGreenhouse(searchable)
                     }
 
                     else -> {
