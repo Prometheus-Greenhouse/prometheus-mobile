@@ -48,8 +48,13 @@ public class LoginActivity extends AppCompatActivity {
                     .enqueue(new Callback<AuthResponse>() {
                         @Override
                         public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-                            Configs.INSTANCE.setACCESS_TOKEN(response.body().getToken());
-                            startMainActivity();
+                            if (response.isSuccessful()) {
+                                Configs.INSTANCE.setACCESS_TOKEN(response.body().getToken());
+                                startMainActivity();
+                            } else {
+                                showToast(response.raw().toString());
+                            }
+
                         }
 
                         @Override

@@ -1,8 +1,9 @@
 package tik.prometheus.mobile.ui.screen;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -11,6 +12,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
+import tik.prometheus.mobile.Configs;
 import tik.prometheus.mobile.R;
 import tik.prometheus.mobile.databinding.ActivityMainBinding;
 
@@ -64,4 +66,11 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_container);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
+
+    public void logout(MenuItem menuItem) {
+        Configs.INSTANCE.setACCESS_TOKEN(null);
+        Intent mainIntent = new Intent(MainActivity.this, LoginActivity.class);
+        MainActivity.this.startActivity(mainIntent);
+    }
+
 }
