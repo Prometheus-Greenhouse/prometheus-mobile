@@ -9,13 +9,16 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import tik.prometheus.mobile.utils.Utils
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 object Configs {
     var TAG = Configs::class.java.toString()
-    private val CONFIG_URI: String = "http://192.168.1.8:8000"
+    val CONNECT_TIMEOUT: Duration = Duration.ofSeconds(60);
+    var ACCESS_TOKEN: String? = null
+    private val CONFIG_URI: String = "http://192.168.1.3:8000"
     private val CONFIG_NAME: String = "prometheus-mobile"
-    private val CONFIG_PROFILE: String = "uat"
+    private val CONFIG_PROFILE: String = "dev"
     var configs: ConfigProperties? = null
     private var loaded: Boolean = false
 

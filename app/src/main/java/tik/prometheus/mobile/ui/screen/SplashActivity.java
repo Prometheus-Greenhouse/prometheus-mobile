@@ -19,10 +19,8 @@ public class SplashActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent mainIntent = new Intent(SplashActivity.this, LoginActivity.class);
                 Configs.INSTANCE.initConfig();
-                ZApplication zApplication = (ZApplication) getApplication();
-                zApplication.initContainer();
                 SplashActivity.this.startActivity(mainIntent);
             }
         }).start();

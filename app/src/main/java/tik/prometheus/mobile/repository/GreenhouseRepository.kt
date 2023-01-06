@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import tik.prometheus.rest.constants.GreenhouseType
 import tik.prometheus.rest.models.Greenhouse
 
-class GreenhouseRepository(val restServiceApi: RestServiceApi) {
+class GreenhouseRepository(val restServiceApi: RestServiceApi=RestServiceHelper.createApi()) {
     fun getGreenhouseListStream(label: String? = null, type: GreenhouseType? = null): Flow<PagingData<Greenhouse>> {
         return Pager(PagingConfig(20)) {
             GreenhouseDataSource(restServiceApi, label, type)

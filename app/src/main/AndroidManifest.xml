@@ -21,6 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:exported="true" android:name=".ui.screen.LoginActivity">
+        </activity>
         <activity
                 android:name=".ui.screen.MainActivity"
                 android:exported="true"
@@ -31,7 +33,6 @@
             <!--                <category android:name="android.intent.category.LAUNCHER"/>-->
             <!--            </intent-filter>-->
         </activity>
-        <service android:name=".services.MqttService"/>
         <service android:name="org.eclipse.paho.android.service.MqttService"/>
     </application>
 
